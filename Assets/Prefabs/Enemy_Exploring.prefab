@@ -202,15 +202,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11f8f43d18d60174cb4942332c00cc5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mask:
+    serializedVersion: 2
+    m_Bits: 256
   coneCollider: {fileID: 6034936503434591974}
   targetFolowDistance: 35
   sightDistance: 15
   sightRadius: 5
-  radius: 10
+  movementRadius: 10
   idleTime: 5
-  mask:
-    serializedVersion: 2
-    m_Bits: 256
+  enemyIndex: 0
 --- !u!195 &238793951344352152
 NavMeshAgent:
   m_ObjectHideFlags: 0

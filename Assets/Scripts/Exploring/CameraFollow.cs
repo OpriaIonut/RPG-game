@@ -5,9 +5,9 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     public Transform target;
-    public float smoothing = 10f;
+    public float smoothing = 10f;   //Used for delay effect
 
-    private Vector3 offset;
+    private Vector3 offset;         //The offset that it starts with
 
     private void Start()
     {
@@ -16,8 +16,8 @@ public class CameraFollow : MonoBehaviour
 
     private void LateUpdate()
     {
-        Vector3 desiredPosition = target.position + offset;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothing * Time.deltaTime);
+        Vector3 desiredPosition = target.position + offset;     //Calculate the position where it should be
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothing * Time.deltaTime);   //Smooth out the position to add delay effect
         transform.position = smoothedPosition;
     }
 }
