@@ -42,7 +42,6 @@ public class PauseMenu : MonoBehaviour
         eventSys = EventSystem.current;
         inventoryMenu.SetActive(false);
         pauseGameMenu.SetActive(false);
-        inventoryScript.enabled = false;
 
         playerObjects = GameObject.FindGameObjectsWithTag("Player");
     }
@@ -86,16 +85,23 @@ public class PauseMenu : MonoBehaviour
 
     public void ToggleInventoryMenu()
     {
+        if(inventoryScript.selectingPlayer)
+        {
+            inventoryScript.SelectingPlayer(false);
+            return;
+        }
+
         inventoryActive = !inventoryActive;
         inventoryMenu.SetActive(inventoryActive);
-        inventoryScript.enabled = inventoryActive;
 
         pauseGameButtons.SetActive(!inventoryActive);
 
-        if(inventoryActive == false)
+        if (inventoryActive == false)
+        {
+            inventoryScript.DeactivateInventoryMenu();
             eventSys.SetSelectedGameObject(pauseHiddenButton);
-
-        if(inventoryActive)
-            inventoryScript.ActivateInventory();
+        }
+        else
+            inventoryScript.ActivateInventoryMenu();
     }
 }

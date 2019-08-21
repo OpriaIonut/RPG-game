@@ -6,132 +6,116 @@ using UnityEngine.UI;
 
 public class InventoryMenu : MonoBehaviour
 {
-    public Image itemTab;
+    public GameObject hiddenButton;
+    public Transform itemSlotsParent;
+    public GameObject itemSlotPrefab;
+    public Text description;
 
-    public GameObject firstSelectedObject;
-    public Text slotDescription;
-    public InventorySlot[] inventorySlots;
+    public GameObject playerSelectMenu;
+    public GameObject playerSelectHiddenButton;
 
-    //public GameObject playerSelectMenu;
-    //public GameObject playerSelectMenuHiddenButton;
-
-    private InventorySlot auxSlot;
-    private Text[] inventorySlotsText;
-    private EventSystem eventSys;
+    [HideInInspector]
+    public bool selectingPlayer = false;
     private Inventory inventory;
-    private bool itemActiveMenu = true;
-    private bool scriptStarted = false;
-    //private bool selectingPlayer = false;
+    private int selectedItemIndex;
+    private bool menuIsActive = false;
+
+    private List<GameObject> itemSlots = new List<GameObject>();
+    private EventSystem eventSys;
 
     private void Start()
     {
         inventory = Inventory.instance;
         eventSys = EventSystem.current;
-        inventorySlotsText = new Text[inventorySlots.Length];
-        for (int index = 0; index < inventorySlotsText.Length; index++)
-        {
-            inventorySlotsText[index] = inventorySlots[index].gameObject.GetComponentInChildren<Text>();
-        }
-
-        eventSys.SetSelectedGameObject(firstSelectedObject);
-        SetInvetoryUI();
-
-        scriptStarted = true;
+        playerSelectMenu.SetActive(false);
     }
 
     private void Update()
     {
-        if (eventSys.currentSelectedGameObject == null)
+        if (menuIsActive)
         {
-            eventSys.SetSelectedGameObject(firstSelectedObject);
+            if (selectingPlayer == false)
+            {
+                for (int index = 0; index < itemSlots.Count; index++)
+                {
+                    if (itemSlots[index] == eventSys.currentSelectedGameObject)
+                    {
+                        selectedItemIndex = index;
+                        description.text = inventory.items[index].first.description;
+                        break;
+                    }
+                }
+            }
+
+            if (eventSys.currentSelectedGameObject != hiddenButton)
+            {
+                if (Input.GetButtonDown("Interact"))
+                {
+                    if (selectingPlayer == false)
+                    {
+                        SelectingPlayer(true);
+                    }
+                    else if (eventSys.currentSelectedGameObject != playerSelectHiddenButton)
+                    {
+                        bool success = eventSys.currentSelectedGameObject.GetComponent<PlayerSelectMenuButton>().ChangeHealth(inventory.items[selectedItemIndex].first);
+                       
+                        if (success)
+                        {
+                            SelectingPlayer(false);
+
+                            inventory.items[selectedItemIndex].last--;
+                            if (inventory.items[selectedItemIndex].last == 0)
+                            {
+                                Destroy(itemSlots[selectedItemIndex]);
+                                itemSlots.RemoveAt(selectedItemIndex);
+                                inventory.items.RemoveAt(selectedItemIndex);
+                            }
+                            InitializeUI();
+
+                            eventSys.SetSelectedGameObject(hiddenButton);
+                            description.text = "";
+                        }
+                    }
+                }
+            }
         }
+    }
 
-        //if (selectingPlayer)
-        //{
-        //    if (Input.GetButtonDown("Interact"))
-        //    {
+    public void ActivateInventoryMenu()
+    {
+        eventSys.SetSelectedGameObject(hiddenButton);
+        menuIsActive = true;
+        InitializeUI();
+    }
 
-        //    }
-        //}
-        //else
-        //{
-        auxSlot = eventSys.currentSelectedGameObject.GetComponent<InventorySlot>();
-        if (itemActiveMenu)
-        {
-            slotDescription.text = auxSlot.itemDescription;
+    public void DeactivateInventoryMenu()
+    {
+        menuIsActive = false;
+        SelectingPlayer(false);
+    }
 
-            //if (Input.GetButtonDown("Interact") && auxSlot.item != null)
-            //{
-            //    playerSelectMenu.SetActive(true);
-            //    eventSys.SetSelectedGameObject(playerSelectMenuHiddenButton);
-            //    selectingPlayer = true;
-            //}
-        }
+    public void SelectingPlayer(bool value)
+    {
+        selectingPlayer = value;
+        playerSelectMenu.SetActive(value);
+
+        if (value == false)
+            eventSys.SetSelectedGameObject(hiddenButton);
         else
-        {
-            slotDescription.text = auxSlot.equipmentDescription;
-        }
-        //}
+            eventSys.SetSelectedGameObject(playerSelectHiddenButton);
     }
 
-    public void AddInfo(ItemScriptable item)
+    private void InitializeUI()
     {
-        for (int index = 0; index < inventorySlots.Length; index++)
+        int aux = itemSlots.Count;
+        for (int index = 0; index < inventory.items.Count - aux; index++)
         {
-            if (inventorySlots[index].item == null)
-            {
-                inventorySlots[index].item = item;
-                inventorySlots[index].itemDescription = GenerateDescription(item);
-                return;
-            }
+            itemSlots.Add(Instantiate(itemSlotPrefab, itemSlotsParent));
         }
-    }
-    public void AddInfo(EquipmentScriptable equipment)
-    {
-        for (int index = 0; index < inventorySlots.Length; index++)
+        for(int index = 0; index < itemSlots.Count; index++)
         {
-            if (inventorySlots[index].equipment == null)
-            {
-                inventorySlots[index].equipment = equipment;
-                inventorySlots[index].equipmentDescription = GenerateDescription(equipment);
-                return;
-            }
+            itemSlots[index].transform.GetChild(0).GetComponent<Text>().text = "" + inventory.items[index].first.itemName;
+            itemSlots[index].transform.GetChild(1).GetComponent<Text>().text = "" + inventory.items[index].last;
         }
-    }
-
-    private string GenerateDescription(ItemScriptable item)
-    {
-        string text = item.itemName + "\n\n";
-        if (item.recovery)
-            text += "Recovery\n";
-        if (item.revival)
-            text += "Revival\n";
-        text += item.effectValue;
-        if (item.effectWithPercentage)
-            text += " %";
-        return text;
-    }
-    private string GenerateDescription(EquipmentScriptable equipment)
-    {
-        string text = equipment.equipmentName + "\n" + equipment.equipmentType + "\n\n";
-        text += "HP:\t\t\t" + equipment.health + "\nDEF:\t\t" + equipment.defense + "\nSPEED:\t" + equipment.speed + "\nSTR:\t\t" + equipment.strength + "\nINT:\t\t\t" + equipment.intelligence + "\nDEX:\t\t" + equipment.dexterity;
-        return text;
-    }
-
-    private void SetInvetoryUI()
-    {
-        for (int index = 0; index < inventorySlotsText.Length; index++)
-        {
-            if (inventorySlots[index].item != null)
-                inventorySlotsText[index].text = inventorySlots[index].item.itemName;
-            else
-                inventorySlotsText[index].text = "";
-        }
-    }
-
-    public void ActivateInventory()
-    {
-        if (scriptStarted == true)
-            eventSys.SetSelectedGameObject(firstSelectedObject);
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HighPotion
   m_EditorClassIdentifier: 
   itemName: High potion
-  recovery: 1
   revival: 0
   effectWithPercentage: 0
   effectValue: 150
+  description: "High potion\n\nRecovery\t150 HP"

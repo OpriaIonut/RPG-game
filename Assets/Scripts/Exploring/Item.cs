@@ -25,12 +25,10 @@ public class Item : MonoBehaviour
             if (itIsItem)
             {
                 inventory.AddItem(item);
-                inventoryCanvas.AddInfo(item);
             }
             else
             {
-                inventory.AddItem(equipment);
-                inventoryCanvas.AddInfo(equipment);
+                inventory.AddEquipment(equipment);
             }
             Destroy(gameObject);
         }

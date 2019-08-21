@@ -6,8 +6,8 @@ using UnityEngine;
 public class ItemScriptable : ScriptableObject
 {
     public string itemName;
-    public bool recovery;
     public bool revival;
     public bool effectWithPercentage;
     public int effectValue;
+    public string description;
 }

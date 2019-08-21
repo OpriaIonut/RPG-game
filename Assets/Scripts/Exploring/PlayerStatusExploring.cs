@@ -27,7 +27,12 @@ public class PlayerStatusExploring : MonoBehaviour
 
     public void ChangeHealth(int value)
     {
-        currentHealth = value;
+        if (value > baseStatus.health)
+            currentHealth = baseStatus.health;
+        else if (value < 0)
+            currentHealth = 0;
+        else
+            currentHealth = value;
         healthBar.fillAmount = (float)currentHealth / baseStatus.health;
         healthText.text = "" + currentHealth + " / " + baseStatus.health;
     }
