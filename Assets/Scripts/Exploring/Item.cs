@@ -4,21 +4,34 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+    public bool itIsItem;
     public ItemScriptable item;
+    public EquipmentScriptable equipment;
 
+    private InventoryMenu inventoryCanvas;
     private Inventory inventory;
     private bool colliding = false;
 
     private void Start()
     {
         inventory = Inventory.instance;
+        inventoryCanvas = FindObjectOfType<InventoryMenu>();
     }
 
     private void Update()
     {
         if(colliding && Input.GetButtonDown("Interact"))
         {
-            inventory.AddItem(item);
+            if (itIsItem)
+            {
+                inventory.AddItem(item);
+                inventoryCanvas.AddInfo(item);
+            }
+            else
+            {
+                inventory.AddItem(equipment);
+                inventoryCanvas.AddInfo(equipment);
+            }
             Destroy(gameObject);
         }
     }

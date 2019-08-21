@@ -24,4 +24,11 @@ public class PlayerStatusExploring : MonoBehaviour
         healthBar.fillAmount = (float)currentHealth / baseStatus.health;
         healthText.text = "" + currentHealth + " / " + baseStatus.health;
     }
+
+    public void ChangeHealth(int value)
+    {
+        currentHealth = value;
+        healthBar.fillAmount = (float)currentHealth / baseStatus.health;
+        healthText.text = "" + currentHealth + " / " + baseStatus.health;
+    }
 }

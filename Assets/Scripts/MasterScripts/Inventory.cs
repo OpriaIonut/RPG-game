@@ -6,7 +6,7 @@ public class Inventory : MonoBehaviour
 {
     public int inventorySize;
     public List<ItemScriptable> items;
-    public List<EquipmentScriptable> equipment;
+    public List<EquipmentScriptable> equipments;
 
     #region Singleton
 
@@ -32,6 +32,14 @@ public class Inventory : MonoBehaviour
         if (items.Count < inventorySize)
         {
             items.Add(item);
+        }
+    }
+
+    public void AddItem(EquipmentScriptable equipment)
+    {
+        if (equipments.Count < inventorySize)
+        {
+            equipments.Add(equipment);
         }
     }
 }

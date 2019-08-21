@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Item", menuName = "ScriptableObjects/Item")]
 public class ItemScriptable : ScriptableObject
 {
+    public string itemName;
     public bool recovery;
     public bool revival;
     public bool effectWithPercentage;

@@ -16,6 +16,7 @@ public class MapEnemyMovement : MonoBehaviour
     [HideInInspector]
     public int enemyIndex;                  //Used to diferentiate between enemies, it is mostly used by other scripts
 
+    private PauseMenu pauseMenu;
     private NavMeshAgent navAgent;          //Reference to navmesh component
     private Transform target;               //Will be set to a value when the player enters our line of sight
     private Vector3 initialPosition;        //The initial position on which we started, is used for most movement calculations
@@ -28,6 +29,7 @@ public class MapEnemyMovement : MonoBehaviour
 
     private void Start()
     {
+        pauseMenu = PauseMenu.instance;
         initialPosition = transform.position;
         navAgent = GetComponent<NavMeshAgent>();
         
@@ -68,6 +70,11 @@ public class MapEnemyMovement : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void StopNavmesh(bool value)
+    {
+        navAgent.isStopped = value;
     }
 
     private IEnumerator LostTargetWaitTime(float delay)
