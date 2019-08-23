@@ -10,4 +10,5 @@ public class ItemScriptable : ScriptableObject
     public bool effectWithPercentage;
     public int effectValue;
     public string description;
+    public int itemIndex;       //Useful for sorting inventory
 }

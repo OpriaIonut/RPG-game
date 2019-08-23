@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 201cf447fa36f144eac85b36fee3bfd4, type: 3}
-  m_Name: HighPotion
+  m_Name: HighRevival
   m_EditorClassIdentifier: 
-  itemName: High potion
-  revival: 0
-  effectWithPercentage: 0
-  effectValue: 150
-  description: "High potion\n\nRecovery\t150 HP"
-  itemIndex: 2
+  itemName: High revival
+  revival: 1
+  effectWithPercentage: 1
+  effectValue: 100
+  description: "High revival\n\nRevival\nRecovery\t100 %"
+  itemIndex: 8

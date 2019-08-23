@@ -45,7 +45,7 @@ public class Status : MonoBehaviour
     
     public bool RestoreHP(ItemScriptable item)
     {
-        if (health == baseStatus.health || (health == 0 && item.revival == false))
+        if (health == baseStatus.health || (health == 0 && item.revival == false) || (health != 0 && item.revival == true))
             return false;
 
         int value = item.effectValue;

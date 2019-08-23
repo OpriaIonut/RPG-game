@@ -47,7 +47,7 @@ public class ItemMenuCombat : MonoBehaviour
     private void Update()
     {
         for(int index = 0; index < errorMessageTime.Count; index++)
-            if(Time.time - errorMessageTime[index].last > 1f)
+            if(Time.time - errorMessageTime[index].second > 1f)
             {
                 errorMessageTime[index].first.SetActive(false);
                 errorMessageTime.RemoveAt(index);
@@ -122,8 +122,8 @@ public class ItemMenuCombat : MonoBehaviour
                         {
                             SelectingPlayer(false);
 
-                            inventory.items[selectedItemIndex].last--;
-                            if (inventory.items[selectedItemIndex].last == 0)
+                            inventory.items[selectedItemIndex].second--;
+                            if (inventory.items[selectedItemIndex].second == 0)
                             {
                                 Destroy(itemSlots[selectedItemIndex]);
                                 itemSlots.RemoveAt(selectedItemIndex);
@@ -138,7 +138,9 @@ public class ItemMenuCombat : MonoBehaviour
                         {
                             errorMessage[playerIndex].SetActive(true);
 
-                            if (playersStatus[playerIndex].health == 0)
+                            if (inventory.items[selectedItemIndex].first.revival)
+                                errorMessageText[playerIndex].text = "Cannot revive";
+                            else if (playersStatus[playerIndex].health == 0)
                                 errorMessageText[playerIndex].text = "Player is dead";
                             else
                                 errorMessageText[playerIndex].text = "Player has full HP";
@@ -204,7 +206,7 @@ public class ItemMenuCombat : MonoBehaviour
         for (int index = 0; index < itemSlots.Count; index++)
         {
             itemSlots[index].transform.GetChild(0).GetComponent<Text>().text = "" + inventory.items[index].first.itemName;
-            itemSlots[index].transform.GetChild(1).GetComponent<Text>().text = "" + inventory.items[index].last;
+            itemSlots[index].transform.GetChild(1).GetComponent<Text>().text = "" + inventory.items[index].second;
         }
     }
 }

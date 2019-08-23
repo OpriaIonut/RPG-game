@@ -10,46 +10,44 @@ public class PlayerSelectMenuButton : MonoBehaviour
     public Text healthText;
     public GameObject errorMessage;
 
+    private Text errorMessageText;
     private float errorMessageTime = 0f;
 
     private void Start()
     {
+        errorMessageText = errorMessage.GetComponentInChildren<Text>();
         healthbar.fillAmount = (float)playerStatus.currentHealth / playerStatus.baseStatus.health;
         healthText.text = "" + playerStatus.currentHealth + " / " + playerStatus.baseStatus.health;
     }
 
     private void Update()
     {
-        if(errorMessage.activeSelf == true)
+        if (errorMessage.activeSelf == true)
             if (Time.time - errorMessageTime > 1f)
                 errorMessage.SetActive(false);
     }
 
     public bool ChangeHealth(ItemScriptable item)
     {
-        if (playerStatus.currentHealth == playerStatus.baseStatus.health)
+        if ((playerStatus.currentHealth == 0 && item.revival == false) || playerStatus.currentHealth != 0 && item.revival == true)
         {
             errorMessage.SetActive(true);
+            errorMessageText.text = "Cannot Revive";
             errorMessageTime = Time.time;
             return false;
         }
 
-        int value = 0;
-        if(playerStatus.currentHealth == 0)
+        if (playerStatus.currentHealth == playerStatus.baseStatus.health)
         {
-            if(item.revival)
-            {
-                value = item.effectValue;
-                if (item.effectWithPercentage)
-                    value = value * playerStatus.baseStatus.health / 100;
-            }
+            errorMessage.SetActive(true);
+            errorMessageTime = Time.time;
+            errorMessageText.text = "Player has full HP";
+            return false;
         }
-        else
-        {
-            value = item.effectValue;
-            if (item.effectWithPercentage)
-                value = value * playerStatus.baseStatus.health / 100;
-        }
+
+        int value = item.effectValue;
+        if (item.effectWithPercentage)
+            value = value * playerStatus.baseStatus.health / 100;
 
         playerStatus.ChangeHealth(value + playerStatus.currentHealth);
         healthbar.fillAmount = (float)playerStatus.currentHealth / playerStatus.baseStatus.health;

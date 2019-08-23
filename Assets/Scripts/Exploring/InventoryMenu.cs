@@ -63,8 +63,8 @@ public class InventoryMenu : MonoBehaviour
                         {
                             SelectingPlayer(false);
 
-                            inventory.items[selectedItemIndex].last--;
-                            if (inventory.items[selectedItemIndex].last == 0)
+                            inventory.items[selectedItemIndex].second--;
+                            if (inventory.items[selectedItemIndex].second == 0)
                             {
                                 Destroy(itemSlots[selectedItemIndex]);
                                 itemSlots.RemoveAt(selectedItemIndex);
@@ -115,7 +115,7 @@ public class InventoryMenu : MonoBehaviour
         for(int index = 0; index < itemSlots.Count; index++)
         {
             itemSlots[index].transform.GetChild(0).GetComponent<Text>().text = "" + inventory.items[index].first.itemName;
-            itemSlots[index].transform.GetChild(1).GetComponent<Text>().text = "" + inventory.items[index].last;
+            itemSlots[index].transform.GetChild(1).GetComponent<Text>().text = "" + inventory.items[index].second;
         }
     }
 }

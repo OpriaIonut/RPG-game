@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: MediumPotion
   m_EditorClassIdentifier: 
   itemName: Medium potion
-  recovery: 1
   revival: 0
   effectWithPercentage: 0
   effectValue: 100
+  description: "Medium potion\n\nRecovery\t100 HP"
+  itemIndex: 1
