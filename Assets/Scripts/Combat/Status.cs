@@ -43,6 +43,24 @@ public class Status : MonoBehaviour
         damageText.text = "";
     }
     
+    public bool RestoreHP(ItemScriptable item)
+    {
+        if (health == baseStatus.health || (health == 0 && item.revival == false))
+            return false;
+
+        int value = item.effectValue;
+        if (item.effectWithPercentage)
+            value = value * baseStatus.health / 100;
+        
+        health += value;
+        if (health > baseStatus.health)
+            health = baseStatus.health;
+
+        healthBar.fillAmount = (float)health / baseStatus.health;
+        healthText.text = "" + health + "/" + baseStatus.health;
+        return true;
+    }
+
     //Method called from other functions
     //Critical damage is calculated outside this function and it will be passed normally onto ammount
     public bool TakeDamage(int ammount, bool criticalHit)

@@ -9,6 +9,24 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(CombatScript))]
 public class TurnBaseScript : MonoBehaviour
 {
+    #region Singleton
+
+    public static TurnBaseScript instance;
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+
+    #endregion
+
     [Header("UI elements")]
     public Text[] turnText;                 // Reference to the UI elements that display the turns, ATM it is a text object but after time I may make them images
     public GameObject hiddenButton;         // Helps the transition of the player buttons
@@ -23,16 +41,17 @@ public class TurnBaseScript : MonoBehaviour
     private int[] turnLayout = new int[20]; // For each turn it contains the index of the character in the vector "characters". If there is no char in this turn then -1
     
     // References to other important scripts
+    [HideInInspector]
+    public EventSystem eventSystem;
     private CombatScript combatManager;
     private EnemyCombatAI enemyAI;
     private DataRetainer dataRetainer;
-    private EventSystem eventSystem;
 
     private void Start()
     {
         // Initialize variables
         dataRetainer = DataRetainer.instance;
-        combatManager = GetComponent<CombatScript>();
+        combatManager = CombatScript.instance;
         enemyAI = GetComponent<EnemyCombatAI>();
         eventSystem = EventSystem.current;
 
@@ -211,6 +230,13 @@ public class TurnBaseScript : MonoBehaviour
         //Enable the turn indicator for the character that needs to act, if there is such a character
         if(turnLayout[0] != -1)
             characters[turnLayout[0]].turnIndicator.enabled = true;
+    }
+
+    public Status GetCurrentCharacter()
+    {
+        if (turnLayout[0] == -1)
+            return null;
+        return characters[turnLayout[0]];
     }
 
     //A character has died so we want to remove him from all lists

@@ -12,7 +12,7 @@ public class EnemyCombatAI : MonoBehaviour
 
     private void Start()
     {
-        turnManager = GetComponent<TurnBaseScript>();
+        turnManager = TurnBaseScript.instance;
 
         //Find all targets; you can't get only the status script from them so there was a need for a workaround
         GameObject[] playerAux = GameObject.FindGameObjectsWithTag("Player");

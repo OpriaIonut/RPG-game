@@ -8,8 +8,9 @@ public class PlayerSelectMenuButton : MonoBehaviour
     public PlayerStatusExploring playerStatus;
     public Image healthbar;
     public Text healthText;
-
     public GameObject errorMessage;
+
+    private float errorMessageTime = 0f;
 
     private void Start()
     {
@@ -17,15 +18,19 @@ public class PlayerSelectMenuButton : MonoBehaviour
         healthText.text = "" + playerStatus.currentHealth + " / " + playerStatus.baseStatus.health;
     }
 
+    private void Update()
+    {
+        if(errorMessage.activeSelf == true)
+            if (Time.time - errorMessageTime > 1f)
+                errorMessage.SetActive(false);
+    }
+
     public bool ChangeHealth(ItemScriptable item)
     {
         if (playerStatus.currentHealth == playerStatus.baseStatus.health)
         {
-            if (transform.childCount == 2)
-            {
-                GameObject clone = Instantiate(errorMessage, transform);
-                Destroy(clone, 1f);
-            }
+            errorMessage.SetActive(true);
+            errorMessageTime = Time.time;
             return false;
         }
 
@@ -51,5 +56,10 @@ public class PlayerSelectMenuButton : MonoBehaviour
         healthText.text = "" + playerStatus.currentHealth + " / " + playerStatus.baseStatus.health;
 
         return true;
+    }
+
+    private void OnDisable()
+    {
+        errorMessage.SetActive(false);
     }
 }

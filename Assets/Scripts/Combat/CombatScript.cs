@@ -7,11 +7,30 @@ using UnityEngine.UI;
 [RequireComponent(typeof(TurnBaseScript))]
 public class CombatScript : MonoBehaviour
 {
+    #region Singleton
+
+    public static CombatScript instance;
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+
+    #endregion
+
     //To do: make boss fights unavoidable
     public int runAwayProbability = 30;             //The probability to run away from a battle
     public float criticalFactorCorrection = 4;      //When we have max dexterity(100) we have a 25% chance to give a critical hit
     public GameObject combatButtons;                //Reference to player buttons so we can disable and enable them on player turn
     public float inputWaitTime = 0.1f;              //How often to check for input
+    public ItemMenuCombat itemMenu;
 
     private Status[] monsterParty;                  //Retains the status for the targets
 
@@ -24,7 +43,7 @@ public class CombatScript : MonoBehaviour
     {
         //In the begining turn off player buttons
         combatButtons.SetActive(false);
-        turnManager = GetComponent<TurnBaseScript>();
+        turnManager = TurnBaseScript.instance;
 
         //Find all enemies; you can't get only the status script from them so there was a need for a workaround
         GameObject[] monsterAux = GameObject.FindGameObjectsWithTag("Enemy");
@@ -107,6 +126,15 @@ public class CombatScript : MonoBehaviour
                     EndPlayerTurn();
                 }
             }
+
+            if(Input.GetButtonDown("Cancel"))
+            {
+                pickTarget = false;
+                combatButtons.SetActive(true);
+                monsterParty[currentTargetIndex].turnIndicator.enabled = false;
+                turnManager.eventSystem.SetSelectedGameObject(turnManager.hiddenButton);
+                currentTargetIndex = 0;
+            }
         }
     }
 
@@ -117,7 +145,7 @@ public class CombatScript : MonoBehaviour
         lastInputTime = Time.time;
         pickTarget = true;
         combatButtons.SetActive(false);                 //Also disabe UI
-        monsterParty[0].turnIndicator.enabled = true;   //And we need a visual representation to see who we pick
+        monsterParty[currentTargetIndex].turnIndicator.enabled = true;   //And we need a visual representation to see who we pick
     }
 
     //Called on button press
@@ -147,6 +175,12 @@ public class CombatScript : MonoBehaviour
     public void StartPlayerTurn()
     {
         combatButtons.SetActive(true);
+    }
+
+    public void SelectItemOption(bool value)
+    {
+        combatButtons.SetActive(!value);
+        itemMenu.ActivateItemMenu(value);
     }
 
     //After we did an action simply change the turn
