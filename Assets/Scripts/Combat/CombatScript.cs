@@ -186,6 +186,7 @@ public class CombatScript : MonoBehaviour
     //After we did an action simply change the turn
     public void EndPlayerTurn()
     {
+        combatButtons.SetActive(false);
         turnManager.ChangeTurn();
     }
 }

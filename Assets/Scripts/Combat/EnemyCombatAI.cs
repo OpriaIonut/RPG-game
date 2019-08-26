@@ -5,6 +5,24 @@ using UnityEngine;
 
 public class EnemyCombatAI : MonoBehaviour
 {
+    #region Singleton
+
+    public static EnemyCombatAI instance;
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+
+    #endregion
+
     public float criticalFactorCorrection = 4;      //When we have max dexterity(100) we have a 25% chance to give a critical hit
 
     private TurnBaseScript turnManager;
@@ -56,9 +74,6 @@ public class EnemyCombatAI : MonoBehaviour
         //Damage the target, it returns true if it has died
         if (playerParty[targetIndex].TakeDamage(damage, criticalHit) == true)
         {
-            //Take him out from all lists in turn base script
-            turnManager.TakeOutCharacters(playerParty[targetIndex]);
-
             //Take him out from our array and resize it
             for (int index = targetIndex; index < playerParty.Length - 1; index++)
                 playerParty[index] = playerParty[index + 1];
@@ -75,6 +90,12 @@ public class EnemyCombatAI : MonoBehaviour
             //Else end the turn
             EndTurn();
         }
+    }
+
+    public void RevivePlayer(Status player)
+    {
+        Array.Resize(ref playerParty, playerParty.Length + 1);
+        playerParty[playerParty.Length - 1] = player;
     }
 
     public void EndTurn()

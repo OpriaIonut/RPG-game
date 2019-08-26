@@ -17,17 +17,21 @@ public class Status : MonoBehaviour
     public float defenseFactorCorrection = 10f; // At max defense (100) you take 1/10 of the damage
     public float dodgeFactorCorrection = 10f;   // At max speed (100) you have a 1/10 chance to dodge
     public int playerIndex;
+    public bool dead = false;
 
     [HideInInspector]
     public bool guarding = false;   //Will become true when the player selects to guard, it halves the damage
 
     [HideInInspector]
     public int health; //Current health
-
+    
+    private EnemyCombatAI enemyCombatAI;
+    private MeshRenderer meshRender;
     private DataRetainer dataRetainer;
 
     private void Start()
     {
+        meshRender = GetComponent<MeshRenderer>();
         //Initialize variables
         if (gameObject.tag == "Player")
         {
@@ -41,12 +45,21 @@ public class Status : MonoBehaviour
         healthBar.fillAmount = (float)health / baseStatus.health; 
         healthText.text = "" + health + "/" + baseStatus.health;
         damageText.text = "";
+        
+        enemyCombatAI = EnemyCombatAI.instance;
     }
     
     public bool RestoreHP(ItemScriptable item)
     {
-        if (health == baseStatus.health || (health == 0 && item.revival == false) || (health != 0 && item.revival == true))
+        if (health == baseStatus.health || (health <= 0 && item.revival == false) || (health != 0 && item.revival == true))
             return false;
+
+        if (meshRender.enabled == false)
+        {
+            enemyCombatAI.RevivePlayer(this);
+            meshRender.enabled = true;
+            dead = false;
+        }
 
         int value = item.effectValue;
         if (item.effectWithPercentage)
@@ -104,9 +117,11 @@ public class Status : MonoBehaviour
         if (health <= 0)
         {
             //Deactivate object if it is dead
+            dead = true;
+            health = 0;
             healthText.text = "";
             damageText.text = "";
-            gameObject.SetActive(false);
+            meshRender.enabled = false;
             return true;
         }
         else

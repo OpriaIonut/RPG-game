@@ -50,6 +50,7 @@ public class DataRetainer : MonoBehaviour
 
     public int GetPlayerHealth(int index)
     {
+        //Debug.Log("Get: " + index);
         if (index < 0 || index >= 4)
             return -1;
 
@@ -57,7 +58,8 @@ public class DataRetainer : MonoBehaviour
     }
     public void SetPlayerHealth(int index, int value)
     {
-        if (value < 0)
+        //Debug.Log("Set: " + index + " " + value);
+        if (value <= 0)
             playersHealth[index] = 1;
         else
             playersHealth[index] = value;

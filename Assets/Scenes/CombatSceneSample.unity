@@ -5217,6 +5217,7 @@ MonoBehaviour:
   endBattleText: {fileID: 557954719}
   canvasAnimator: {fileID: 527160065}
   currentTurn: {fileID: 0}
+  eventSystem: {fileID: 0}
 --- !u!4 &915541138
 Transform:
   m_ObjectHideFlags: 0
@@ -5305,6 +5306,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player1
       objectReference: {fileID: 0}
+    - target: {fileID: 5625028719237981932, guid: 0011afea4f0b6b94f94317a4ad451291,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5625028719237981943, guid: 0011afea4f0b6b94f94317a4ad451291,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5386,6 +5392,16 @@ PrefabInstance:
       propertyPath: damageText
       value: 
       objectReference: {fileID: 998858324}
+    - target: {fileID: 5625028719237981939, guid: 0011afea4f0b6b94f94317a4ad451291,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5625028719237981937, guid: 0011afea4f0b6b94f94317a4ad451291,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0011afea4f0b6b94f94317a4ad451291, type: 3}
 --- !u!114 &938730865 stripped

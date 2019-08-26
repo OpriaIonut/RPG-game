@@ -36,7 +36,9 @@ public class TurnBaseScript : MonoBehaviour
     [HideInInspector]
     public Status currentTurn;              // Reference to the status of the character that is about to act (turnLayout[0])
 
-    private Status[] characters;            // Reference to all characters in the scene
+    public List<Status> deadPlayers = new List<Status>();
+    [HideInInspector]
+    public Status[] characters;            // Reference to all characters in the scene
     private int[] turnWaitTime;             // Retains the wait time for all characters. It is calculated at the beginning because the speed doesn't change.
     private int[] turnLayout = new int[20]; // For each turn it contains the index of the character in the vector "characters". If there is no char in this turn then -1
     
@@ -117,7 +119,7 @@ public class TurnBaseScript : MonoBehaviour
         SetUI();        //Set the UI elements
 
         //If the current turn doesn't have a character than we call this function again but with a delay
-        if (turnLayout[0] == -1)
+        if (turnLayout[0] == -1 || characters[turnLayout[0]].dead == true)
         {
             currentTurn = null;
             StartCoroutine("ChangeTurnsWaitTime", 0.5f);
@@ -216,7 +218,7 @@ public class TurnBaseScript : MonoBehaviour
         for(int index = 0; index < turnLayout.Length; index++)
         {
             //Empty the text for all turns that don't have a player
-            if (turnLayout[index] == -1)
+            if (turnLayout[index] == -1 || characters[turnLayout[index]].dead == true)
                 turnText[index].text = "";
             else
                 turnText[index].text = characters[turnLayout[index]].name;
@@ -228,7 +230,7 @@ public class TurnBaseScript : MonoBehaviour
             characters[index].turnIndicator.enabled = false;
         }
         //Enable the turn indicator for the character that needs to act, if there is such a character
-        if(turnLayout[0] != -1)
+        if(turnLayout[0] != -1 && characters[turnLayout[0]].dead == false)
             characters[turnLayout[0]].turnIndicator.enabled = true;
     }
 
@@ -242,32 +244,35 @@ public class TurnBaseScript : MonoBehaviour
     //A character has died so we want to remove him from all lists
     public void TakeOutCharacters(Status character)
     {
-        bool cond = false;
-        for(int index = 0; index < characters.Length - 1; index++)
+        if (character.tag != "Player")
         {
-            //We find the character
-            if (character == characters[index])
+            bool cond = false;
+            for (int index = 0; index < characters.Length - 1; index++)
             {
-                cond = true;
+                //We find the character
+                if (character == characters[index])
+                {
+                    cond = true;
+                }
+                //We shift all arrays and resize them
+                if (cond == true)
+                {
+                    turnWaitTime[index] = turnWaitTime[index + 1];
+                    characters[index] = characters[index + 1];
+                }
             }
-            //We shift all arrays and resize them
-            if(cond == true)
-            {
-                turnWaitTime[index] = turnWaitTime[index + 1];
-                characters[index] = characters[index + 1];
-            }
-        }
-        Array.Resize(ref characters, characters.Length - 1);
-        Array.Resize(ref turnWaitTime, turnWaitTime.Length - 1);
+            Array.Resize(ref characters, characters.Length - 1);
+            Array.Resize(ref turnWaitTime, turnWaitTime.Length - 1);
 
-        //We erase him from the turns list
-        //Because we shifted all values in the array, the last position will give us out of bounds.
-        for (int index2 = 0; index2 < turnLayout.Length; index2++)
-        {
-            if (turnLayout[index2] == characters.Length)
+            //We erase him from the turns list
+            //Because we shifted all values in the array, the last position will give us out of bounds.
+            for (int index2 = 0; index2 < turnLayout.Length; index2++)
             {
-                turnLayout[index2] = -1;
-                break;
+                if (turnLayout[index2] == characters.Length)
+                {
+                    turnLayout[index2] = -1;
+                    break;
+                }
             }
         }
     }
