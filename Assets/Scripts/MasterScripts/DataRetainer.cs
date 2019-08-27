@@ -7,7 +7,7 @@ public class DataRetainer : MonoBehaviour
     public PlayerStatusExploring[] playerStatus;    //Reference to all player's status in order to instantiate it in Awake
     public int[] playersHealth = new int[4];        //Retains the current health for all players
     public Transform[] playersTransform;            //Used to initialize playersPosition. It will be null after changing scenes so we need to use another vector.
-    
+
     public List<int> defeatedEnemiesIndex;          //It retains all the indexes of the enemies that we defeated and that haven't been spawned yet
 
     private Vector3[] playersPosition;              //Remembers the player's position when passing through scenes

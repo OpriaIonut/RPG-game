@@ -11,13 +11,16 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseGameButtons;
     public GameObject inventoryMenu;
     public InventoryMenu inventoryScript;
+    public GameObject equipmentMenu;
 
     private EventSystem eventSys;
     private GameObject[] playerObjects;
     private List<MapEnemyMovement> enemyMovementScripts = new List<MapEnemyMovement>();
+    private EquipmentMenu equipmentMenuScript;
 
     private bool gameIsPaused = false;
     private bool inventoryActive = false;
+    private bool equipmentActive = false;
 
     #region Singleton
 
@@ -42,7 +45,9 @@ public class PauseMenu : MonoBehaviour
         eventSys = EventSystem.current;
         inventoryMenu.SetActive(false);
         pauseGameMenu.SetActive(false);
+        equipmentMenu.SetActive(false);
 
+        equipmentMenuScript = GetComponent<EquipmentMenu>();
         playerObjects = GameObject.FindGameObjectsWithTag("Player");
     }
 
@@ -52,6 +57,8 @@ public class PauseMenu : MonoBehaviour
         {
             if (inventoryActive)
                 ToggleInventoryMenu();
+            else if (equipmentActive)
+                ToggleEquipmentMenu();
             else
                 TogglePauseMenu();
         }
@@ -103,5 +110,15 @@ public class PauseMenu : MonoBehaviour
         }
         else
             inventoryScript.ActivateInventoryMenu();
+    }
+
+    public void ToggleEquipmentMenu()
+    {
+        equipmentActive = !equipmentActive;
+        equipmentMenu.SetActive(equipmentActive);
+        equipmentMenuScript.ActivateEquipmentMenu(equipmentActive);
+
+        if (equipmentActive == false)
+            eventSys.SetSelectedGameObject(pauseHiddenButton);
     }
 }
