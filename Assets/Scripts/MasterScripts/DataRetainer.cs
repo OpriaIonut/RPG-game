@@ -11,6 +11,7 @@ public class DataRetainer : MonoBehaviour
     public List<int> defeatedEnemiesIndex;          //It retains all the indexes of the enemies that we defeated and that haven't been spawned yet
 
     private Vector3[] playersPosition;              //Remembers the player's position when passing through scenes
+    private EquipmentHolder equipmentHolder;
 
     #region Singleton and Initialization
 
@@ -21,23 +22,29 @@ public class DataRetainer : MonoBehaviour
         if (instance != null)
         {
             Destroy(this.gameObject);
+            return;
         }
         else
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
-
-            //Initialize variables in awake; it would be too late in start because of other scripts
-            playersPosition = new Vector3[playersTransform.Length];
-            for (int index = 0; index < playersHealth.Length; index++)
-            {
-                playersHealth[index] = playerStatus[index].baseStatus.health;
-                playersPosition[index] = playersTransform[index].position;
-            }
         }
     }
 
     #endregion
+
+    //Called by equipment holder after it's awake because we need that to be done before the initialization of the variables of this script
+    public void Init()
+    {
+        equipmentHolder = EquipmentHolder.instance;
+
+        playersPosition = new Vector3[playersTransform.Length];
+        for (int index = 0; index < playersHealth.Length; index++)
+        {
+            playersHealth[index] = playerStatus[index].baseStatus.health + equipmentHolder.playersHealth[playerStatus[index].playerIndex];
+            playersPosition[index] = playersTransform[index].position;
+        }
+    }
 
     public void SetPlayerPosition(int index, Vector3 pos)
     {
@@ -50,7 +57,6 @@ public class DataRetainer : MonoBehaviour
 
     public int GetPlayerHealth(int index)
     {
-        //Debug.Log("Get: " + index);
         if (index < 0 || index >= 4)
             return -1;
 
@@ -58,7 +64,6 @@ public class DataRetainer : MonoBehaviour
     }
     public void SetPlayerHealth(int index, int value)
     {
-        //Debug.Log("Set: " + index + " " + value);
         if (value <= 0)
             playersHealth[index] = 1;
         else

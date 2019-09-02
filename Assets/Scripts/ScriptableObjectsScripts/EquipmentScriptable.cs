@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Used by multiple scripts to define the equipment type
 public enum EquipmentType
 {
     Weapon,
@@ -14,6 +15,7 @@ public enum EquipmentType
     NumOfEquipmentTypes
 };
 
+//Used by multiple scripts to define player types
 public enum PlayerType
 {
     Player1,
@@ -23,10 +25,11 @@ public enum PlayerType
 };
 
 [CreateAssetMenu(fileName = "Equipment", menuName = "ScriptableObjects/Equipment")]
+[System.Serializable]
 public class EquipmentScriptable : ScriptableObject
 {
     public string equipmentName;
-    public PlayerType compatiblePlayer;
-    public EquipmentType equipmentType;
+    public PlayerType playerType;           //The player that can equip the item
+    public EquipmentType equipmentType;     //The equipment type/slot that will have this equipment equipped
     public int health, defense, speed, strength, intelligence, dexterity;
 }

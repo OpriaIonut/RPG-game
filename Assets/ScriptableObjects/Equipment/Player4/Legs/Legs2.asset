@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Legs2
   m_EditorClassIdentifier: 
   equipmentName: Legs2
-  compatiblePlayer: 0
+  playerType: 3
   equipmentType: 6
   health: 6
   defense: 4

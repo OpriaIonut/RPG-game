@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Shoulder1
   m_EditorClassIdentifier: 
   equipmentName: Shoulder1
-  compatiblePlayer: 0
+  playerType: 1
   equipmentType: 3
   health: 5
   defense: 7

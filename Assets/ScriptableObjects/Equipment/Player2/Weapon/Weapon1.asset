@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Weapon1
   m_EditorClassIdentifier: 
   equipmentName: Weapon1
-  compatiblePlayer: 0
+  playerType: 1
   equipmentType: 0
   health: 5
   defense: 7

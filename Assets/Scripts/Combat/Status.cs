@@ -22,55 +22,89 @@ public class Status : MonoBehaviour
     [HideInInspector]
     public bool guarding = false;   //Will become true when the player selects to guard, it halves the damage
 
-    [HideInInspector]
-    public int health; //Current health
-    
+    //These variables will hold the total status of the player (base status + equipment status)
+    [HideInInspector] public int health;        //Current health
+    [HideInInspector] public int maxHealth;     
+    [HideInInspector] public int defense;
+    [HideInInspector] public int speed;
+    [HideInInspector] public int strength;
+    [HideInInspector] public int intelligence;
+    [HideInInspector] public int dexterity;
+
+    private EquipmentHolder equipmentHolder;
     private EnemyCombatAI enemyCombatAI;
-    private MeshRenderer meshRender;
+    private MeshRenderer meshRender;        //When the player dies we deactivate it's meshRenderer
     private DataRetainer dataRetainer;
 
     private void Start()
     {
-        meshRender = GetComponent<MeshRenderer>();
         //Initialize variables
+        meshRender = GetComponent<MeshRenderer>();
+        //Calculate all status variables
         if (gameObject.tag == "Player")
         {
+            //If it is a player we add the base status + the equipment status
+            equipmentHolder = EquipmentHolder.instance;
             dataRetainer = DataRetainer.instance;
             health = dataRetainer.GetPlayerHealth(playerIndex);
+
+            maxHealth = baseStatus.health + equipmentHolder.playersHealth[playerIndex];
+            speed = baseStatus.speed + equipmentHolder.playersSpeed[playerIndex];
+            defense = baseStatus.defense + equipmentHolder.playersDefense[playerIndex];
+            strength = baseStatus.strength + equipmentHolder.playersStrength[playerIndex];
+            dexterity = baseStatus.dexterity + equipmentHolder.playersDexterity[playerIndex];
+            intelligence = baseStatus.intelligence + equipmentHolder.playersIntelligence[playerIndex];
         }
         else
         {
+            //If it is an enemy we add just it's base status
             health = baseStatus.health;
+            maxHealth = baseStatus.health;
+            defense = baseStatus.defense;
+            speed = baseStatus.speed;
+            strength = baseStatus.strength;
+            dexterity = baseStatus.dexterity;
+            intelligence = baseStatus.intelligence;
         }
-        healthBar.fillAmount = (float)health / baseStatus.health; 
-        healthText.text = "" + health + "/" + baseStatus.health;
+        //Set the UI
         damageText.text = "";
-        
+        healthBar.fillAmount = (float)health / maxHealth;
+        healthText.text = "" + health + "/" + maxHealth;
+
         enemyCombatAI = EnemyCombatAI.instance;
     }
-    
+
+    //Called by multiple scripts; return true if we can restore health and if we did so, and false otherwise
     public bool RestoreHP(ItemScriptable item)
     {
-        if (health == baseStatus.health || (health <= 0 && item.revival == false) || (health != 0 && item.revival == true))
+        if (health == maxHealth)
+            return false;
+
+        if ((health <= 0 && item.revival == false) || (health != 0 && item.revival == true))
             return false;
 
         if (meshRender.enabled == false)
         {
+            //When we revive the player we add it again to the enemyCombatAI list so that it can target us again
             enemyCombatAI.RevivePlayer(this);
             meshRender.enabled = true;
             dead = false;
         }
 
+        //Calculate how much we should restore
         int value = item.effectValue;
         if (item.effectWithPercentage)
-            value = value * baseStatus.health / 100;
-        
-        health += value;
-        if (health > baseStatus.health)
-            health = baseStatus.health;
+        {
+            value = value * maxHealth / 100;
+        }
 
-        healthBar.fillAmount = (float)health / baseStatus.health;
-        healthText.text = "" + health + "/" + baseStatus.health;
+        health += value;
+        if (health > maxHealth)
+            health = maxHealth;
+
+        //Update the UI
+        healthBar.fillAmount = (float)health / maxHealth;
+        healthText.text = "" + health + "/" + maxHealth;
         return true;
     }
 
@@ -79,7 +113,7 @@ public class Status : MonoBehaviour
     public bool TakeDamage(int ammount, bool criticalHit)
     {
         //Check if we can dodge the attack
-        if (Random.Range(0f, 100f) < (baseStatus.speed / dodgeFactorCorrection))
+        if (Random.Range(0f, 100f) < (speed / dodgeFactorCorrection))
         {
             //If so change the color of the text to something evident and stop the program
             damageText.color = Color.yellow;
@@ -92,8 +126,8 @@ public class Status : MonoBehaviour
         //If the defense status is less than the defenseFactorCorrection it will actually increase the damage taken
         //We don't want that, so if it is less than the defenseFactorCorrection we will apply the whole damage
         int damage = ammount;
-        if (baseStatus.defense > defenseFactorCorrection)
-            damage = (int)(damage / (baseStatus.defense / defenseFactorCorrection));
+        if (defense > defenseFactorCorrection)
+            damage = (int)(damage / (defense / defenseFactorCorrection));
 
         //If we are guarding then halve the damage
         if (guarding)
@@ -107,13 +141,14 @@ public class Status : MonoBehaviour
 
         //Change health and show UI
         health -= damage;
-        healthText.text = "" + health + "/" + baseStatus.health;
         damageText.text = "" + damage;
-        healthBar.fillAmount = (float)health / baseStatus.health;
+
+        healthText.text = "" + health + "/" + maxHealth;
+        healthBar.fillAmount = (float)health / maxHealth;
 
         //Disable the damage text after a second
         StartCoroutine(DisableUI(1f));
-        
+
         if (health <= 0)
         {
             //Deactivate object if it is dead

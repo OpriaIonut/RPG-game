@@ -16,8 +16,8 @@ MonoBehaviour:
   compatiblePlayer: 0
   equipmentType: 3
   health: 5
-  defense: 7
+  defense: 9
   speed: 6
   strength: 9
-  intelligence: 1
+  intelligence: 5
   dexterity: 3

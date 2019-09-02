@@ -9,12 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10f5c83eda9934f478672539b3fc9119, type: 3}
-  m_Name: Enemy4
+  m_Script: {fileID: 11500000, guid: d8a7df803db0c4145810722411ba1757, type: 3}
+  m_Name: Chest3
   m_EditorClassIdentifier: 
-  health: 10
-  defense: 34
-  speed: 22
-  strength: 50
-  intelligence: 26
-  dexterity: 12
+  equipmentName: Chest3
+  playerType: 1
+  equipmentType: 2
+  health: 1
+  defense: 2
+  speed: 4
+  strength: 4
+  intelligence: 8
+  dexterity: 8

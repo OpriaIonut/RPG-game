@@ -62,10 +62,10 @@ public class EnemyCombatAI : MonoBehaviour
         playerParty[targetIndex].turnIndicator.enabled = false;
 
         //Calculate the critical chance probability
-        int damage = turnManager.currentTurn.baseStatus.strength;
+        int damage = turnManager.currentTurnCharacter.strength;
         bool criticalHit = false;
 
-        if (UnityEngine.Random.Range(0, 100) < (int)(turnManager.currentTurn.baseStatus.dexterity / criticalFactorCorrection))
+        if (UnityEngine.Random.Range(0, 100) < (int)(turnManager.currentTurnCharacter.dexterity / criticalFactorCorrection))
         {
             criticalHit = true;
             damage *= 3;
@@ -92,6 +92,7 @@ public class EnemyCombatAI : MonoBehaviour
         }
     }
 
+    //Add the player to the array so that we can select, damage, etc. it again
     public void RevivePlayer(Status player)
     {
         Array.Resize(ref playerParty, playerParty.Length + 1);

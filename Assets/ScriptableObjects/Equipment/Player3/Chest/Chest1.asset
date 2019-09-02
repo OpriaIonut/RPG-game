@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Chest1
   m_EditorClassIdentifier: 
   equipmentName: Chest1
-  compatiblePlayer: 0
+  playerType: 2
   equipmentType: 2
   health: 5
   defense: 7

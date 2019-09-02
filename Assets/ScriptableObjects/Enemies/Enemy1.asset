@@ -15,6 +15,6 @@ MonoBehaviour:
   health: 10
   defense: 13
   speed: 30
-  strength: 20
+  strength: 50
   intelligence: 9
   dexterity: 15

@@ -13,27 +13,31 @@ public class PlayerStatusExploring : MonoBehaviour
     [HideInInspector]
     public int currentHealth;
 
+    [HideInInspector]
+    public EquipmentHolder equipmentHolder;
     private DataRetainer dataRetainer;
 
     private void Start()
     {
         dataRetainer = DataRetainer.instance;
-        
-        //The health will not change throughout the scene ( for not ) so we update the UI elements only in Start
+        equipmentHolder = EquipmentHolder.instance;
+
+        //Set the UI
         currentHealth = dataRetainer.GetPlayerHealth(playerIndex);
-        healthBar.fillAmount = (float)currentHealth / baseStatus.health;
-        healthText.text = "" + currentHealth + " / " + baseStatus.health;
+        healthBar.fillAmount = (float)currentHealth / (baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
+        healthText.text = "" + currentHealth + " / " + (baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
     }
 
+    //Change the health and set the UI
     public void ChangeHealth(int value)
     {
-        if (value > baseStatus.health)
-            currentHealth = baseStatus.health;
+        if (value > (baseStatus.health + equipmentHolder.playersHealth[playerIndex]))
+            currentHealth = baseStatus.health + equipmentHolder.playersHealth[playerIndex];
         else if (value < 0)
             currentHealth = 0;
         else
             currentHealth = value;
-        healthBar.fillAmount = (float)currentHealth / baseStatus.health;
-        healthText.text = "" + currentHealth + " / " + baseStatus.health;
+        healthBar.fillAmount = (float)currentHealth / (baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
+        healthText.text = "" + currentHealth + " / " + (baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
     }
 }

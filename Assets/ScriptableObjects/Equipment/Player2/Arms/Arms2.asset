@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Arms2
   m_EditorClassIdentifier: 
   equipmentName: Arms2
-  compatiblePlayer: 0
+  playerType: 1
   equipmentType: 4
   health: 6
   defense: 4

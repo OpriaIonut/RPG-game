@@ -34,7 +34,7 @@ public class TurnBaseScript : MonoBehaviour
     public Animator canvasAnimator;
 
     [HideInInspector]
-    public Status currentTurn;              // Reference to the status of the character that is about to act (turnLayout[0])
+    public Status currentTurnCharacter;              // Reference to the status of the character that is about to act (turnLayout[0])
 
     public List<Status> deadPlayers = new List<Status>();
     [HideInInspector]
@@ -121,15 +121,15 @@ public class TurnBaseScript : MonoBehaviour
         //If the current turn doesn't have a character than we call this function again but with a delay
         if (turnLayout[0] == -1 || characters[turnLayout[0]].dead == true)
         {
-            currentTurn = null;
+            currentTurnCharacter = null;
             StartCoroutine("ChangeTurnsWaitTime", 0.5f);
         }
         else
         {
             //If we have a character than we retain it's status, we initialize the guarding variable to false
-            currentTurn = characters[turnLayout[0]];
-            currentTurn.guarding = false;
-            if (currentTurn.gameObject.tag == "Player")
+            currentTurnCharacter = characters[turnLayout[0]];
+            currentTurnCharacter.guarding = false;
+            if (currentTurnCharacter.gameObject.tag == "Player")
             {
                 //If it is the player turn start the player interface
                 eventSystem.SetSelectedGameObject(hiddenButton);
@@ -155,9 +155,9 @@ public class TurnBaseScript : MonoBehaviour
         int maxSpeed = 0;
         foreach(Status aux in characters)
         {
-            if(aux.baseStatus.speed > maxSpeed)
+            if(aux.speed > maxSpeed)
             {
-                maxSpeed = aux.baseStatus.speed;
+                maxSpeed = aux.speed;
             }
         }
         
@@ -167,7 +167,7 @@ public class TurnBaseScript : MonoBehaviour
              * We need to clamp it because it can go over the max limit
              * minDelay - the fastest player will have a speed of one (attack every turn) so we need an offset
              */
-            turnWaitTime[participantsIndex] = Mathf.Clamp((int)(turnLayout.Length - turnLayout.Length * ((float)characters[participantsIndex].baseStatus.speed / maxSpeed) + 5), 5, turnLayout.Length - 1);
+            turnWaitTime[participantsIndex] = Mathf.Clamp((int)(turnLayout.Length - turnLayout.Length * ((float)characters[participantsIndex].speed / maxSpeed) + 5), 5, turnLayout.Length - 1);
 
             //After we calculate the wait time for the current player we place it where it's turn should be
             //If the position is occupided
@@ -205,9 +205,9 @@ public class TurnBaseScript : MonoBehaviour
         }
         //We set the currentTurn status script to what it should be
         if (turnLayout[0] == -1)
-            currentTurn = null;
+            currentTurnCharacter = null;
         else
-            currentTurn = characters[turnLayout[0]];
+            currentTurnCharacter = characters[turnLayout[0]];
 
         //Finally we initialize the UI
         SetUI();

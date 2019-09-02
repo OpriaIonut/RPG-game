@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Waist2
   m_EditorClassIdentifier: 
   equipmentName: Waist2
-  compatiblePlayer: 0
+  playerType: 3
   equipmentType: 5
   health: 6
   defense: 4

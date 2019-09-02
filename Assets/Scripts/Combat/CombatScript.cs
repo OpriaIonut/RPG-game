@@ -90,10 +90,10 @@ public class CombatScript : MonoBehaviour
                 monsterParty[currentTargetIndex].turnIndicator.enabled = false;
 
                 //Calculate critical damage probability
-                int damage = turnManager.currentTurn.baseStatus.strength;
+                int damage = turnManager.currentTurnCharacter.strength;
                 bool criticalHit = false;
 
-                if (UnityEngine.Random.Range(0, 100) < (int)(turnManager.currentTurn.baseStatus.dexterity / criticalFactorCorrection))
+                if (UnityEngine.Random.Range(0, 100) < (int)(turnManager.currentTurnCharacter.dexterity / criticalFactorCorrection))
                 {
                     criticalHit = true;
                     damage *= 3;
@@ -152,7 +152,7 @@ public class CombatScript : MonoBehaviour
     public void DefendAction()
     {
         combatButtons.SetActive(false);
-        turnManager.currentTurn.guarding = true;
+        turnManager.currentTurnCharacter.guarding = true;
         EndPlayerTurn();    //End the player turn. I made it into a fct because I may add more stuff to it later
     }
 
@@ -177,6 +177,7 @@ public class CombatScript : MonoBehaviour
         combatButtons.SetActive(true);
     }
 
+    //Called by ItemMenuCombat script to toggle the item menu
     public void SelectItemOption(bool value)
     {
         combatButtons.SetActive(!value);

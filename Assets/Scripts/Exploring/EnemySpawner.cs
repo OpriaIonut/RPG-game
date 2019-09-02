@@ -34,13 +34,14 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    //Index is the index for the spawnPoint
     private IEnumerator SpawnWithDelay(int index)
     {
         yield return new WaitForSeconds(spawnDelay);
-        int enemyIndex = Random.Range(0, enemyToSpawn.Length);
+        int enemyIndex = Random.Range(0, enemyToSpawn.Length);      //Get a random enemy to spawn
         MapEnemyMovement clone = Instantiate(enemyToSpawn[index], spawnPoints[index]).GetComponent<MapEnemyMovement>();
-        clone.enemyIndex = index;
-        pauseMenu.AddEnemyMovementScript(ref clone);
+        clone.enemyIndex = index;                                   //Spawn it and set it's index to what it's supposed to be
+        pauseMenu.AddEnemyMovementScript(ref clone);                //Add it's script to the pause menu list so that we can pause the game safely
         dataRetainer.DeleteEncounter(index);    //The enemy has been spawned so we need to delete it from our defeatedEnemiesIndex list
     }
 }
