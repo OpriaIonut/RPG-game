@@ -9,7 +9,7 @@ public class PlayerStatusExploring : MonoBehaviour
     public Image healthBar;
     public Text healthText;
     public int playerIndex;             //Used to diferentiate between players, somewhat better than giving each player a different tag
-
+    
     [HideInInspector]
     public int currentHealth;
 
@@ -21,7 +21,7 @@ public class PlayerStatusExploring : MonoBehaviour
     {
         dataRetainer = DataRetainer.instance;
         equipmentHolder = EquipmentHolder.instance;
-
+        
         //Set the UI
         currentHealth = dataRetainer.GetPlayerHealth(playerIndex);
         healthBar.fillAmount = (float)currentHealth / (baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
@@ -32,7 +32,7 @@ public class PlayerStatusExploring : MonoBehaviour
     public void ChangeHealth(int value)
     {
         if (value > (baseStatus.health + equipmentHolder.playersHealth[playerIndex]))
-            currentHealth = baseStatus.health + equipmentHolder.playersHealth[playerIndex];
+            currentHealth = (baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
         else if (value < 0)
             currentHealth = 0;
         else

@@ -86,11 +86,13 @@ public class EquipmentHolder : MonoBehaviour
     public int[] playersIntelligence = new int[4];
     public int[] playersDexterity = new int[4];
 
+    private StatusMenu statusMenu;
     private Inventory inventory;
     private DataRetainer dataRetainer;
 
     private void Start()
     {
+        statusMenu = StatusMenu.instance;
         dataRetainer = DataRetainer.instance;
     }
 
@@ -160,6 +162,7 @@ public class EquipmentHolder : MonoBehaviour
         CalculateEquipmentStatus();
         ChangePlayerHealth();   //Change the players health 
         inventory.FindAndSetEquipped(equipment, true);  //Set the new equipment as equipped
+        statusMenu.UpdateUI();
     }
 
     //Change the player health for all players, called when changing equipment 

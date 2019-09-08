@@ -108,7 +108,7 @@ public class EquipmentMenu : MonoBehaviour
                 if (!selectEquipment)
                 {
                     //Make a delay for the input
-                    if (Time.time - lastInputTime > 0.25f)
+                    if (Time.time - lastInputTime > 0.5f)
                     {
                         float input = Input.GetAxis("Horizontal");
 

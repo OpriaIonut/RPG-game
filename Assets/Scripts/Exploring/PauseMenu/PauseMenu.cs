@@ -12,16 +12,19 @@ public class PauseMenu : MonoBehaviour
     public GameObject inventoryMenu;        //Reference to the inventory UI menu so that we can toggle it
     public InventoryMenu inventoryScript;
     public GameObject equipmentMenu;        //Reference to the equipment UI menu so that we can toggle it
+    public GameObject statusMenu;           //Reference to the status UI menu so that we can toggle it
     public GameObject[] playerObjects;     //When we pause the game we deactivate it
 
     private EventSystem eventSys;
     private List<MapEnemyMovement> enemyMovementScripts = new List<MapEnemyMovement>(); //Reerence to all the enemyMovement scripts so that we can stop the navmeshes from them when pausing the game
     private EquipmentMenu equipmentMenuScript;
+    private StatusMenu statusMenuScript;
 
     //Booleans used for the transitions between menus
     private bool gameIsPaused = false;
     private bool inventoryActive = false;
     private bool equipmentActive = false;
+    private bool statusActive = false;
 
     #region Singleton
 
@@ -46,9 +49,11 @@ public class PauseMenu : MonoBehaviour
         //When we start the game turn everything off
         eventSys = EventSystem.current;
         inventoryMenu.SetActive(false);
-        pauseGameMenu.SetActive(false);
         equipmentMenu.SetActive(false);
-        
+        statusMenu.SetActive(false);
+        pauseGameMenu.SetActive(false);
+
+        statusMenuScript = StatusMenu.instance;
         equipmentMenuScript = GetComponent<EquipmentMenu>();
     }
 
@@ -62,6 +67,8 @@ public class PauseMenu : MonoBehaviour
                 ToggleInventoryMenu();
             else if (equipmentActive)   //Else if the equipment is active, deactivate it
                 ToggleEquipmentMenu();
+            else if (statusActive)
+                ToggleStatusMenu();
             else
                 TogglePauseMenu();      //Otherwise, if no menu is active, toggle the pause menu
         }
@@ -142,6 +149,17 @@ public class PauseMenu : MonoBehaviour
 
         //If we are disabling the equipment menu, set the focus to the hidden button
         if (equipmentActive == false)
+            eventSys.SetSelectedGameObject(pauseHiddenButton);
+    }
+
+    public void ToggleStatusMenu()
+    {
+        statusActive = !statusActive;
+        statusMenu.SetActive(statusActive);
+        pauseGameButtons.SetActive(!equipmentActive);
+        statusMenuScript.ToggleStatusMenu(statusActive);
+
+        if (statusActive == false)
             eventSys.SetSelectedGameObject(pauseHiddenButton);
     }
 }

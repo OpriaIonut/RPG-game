@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10f5c83eda9934f478672539b3fc9119, type: 3}
   m_Name: Player4
   m_EditorClassIdentifier: 
+  level: 1
   health: 10
   defense: 13
   speed: 35
