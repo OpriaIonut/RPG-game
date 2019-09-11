@@ -8,6 +8,8 @@ public class PlayerSelectMenuButton : MonoBehaviour
 {
     public PlayerStatusExploring playerStatus;
     public Image healthbar;
+    public Image mpBar;
+    public Text mpText;
     public Text healthText;
     public GameObject errorMessage;     //Refefrence to the error message that we will show if something doesn't work
 
@@ -30,6 +32,8 @@ public class PlayerSelectMenuButton : MonoBehaviour
         //If there are problems with efficiency, change this
         healthbar.fillAmount = (float)playerStatus.currentHealth / (playerStatus.baseStatus.health + playerStatus.equipmentHolder.playersHealth[playerStatus.playerIndex]);
         healthText.text = "" + playerStatus.currentHealth + " / " + (playerStatus.baseStatus.health + playerStatus.equipmentHolder.playersHealth[playerStatus.playerIndex]);
+        mpBar.fillAmount = (float)playerStatus.currentMP / playerStatus.baseStatus.mana;
+        mpText.text = "" + playerStatus.currentMP + " / " + playerStatus.baseStatus.mana;
     }
 
     //Called after selecting a player by the InventoryMenu script
@@ -60,6 +64,20 @@ public class PlayerSelectMenuButton : MonoBehaviour
 
         //Change it's health (by calling this fct. we also update it's UI) and return true because we were succesful
         playerStatus.ChangeHealth(value + playerStatus.currentHealth);
+        return true;
+    }
+
+    public bool ChangeMana(ItemScriptable item)
+    {
+        if(playerStatus.currentMP == playerStatus.baseStatus.mana)
+        {
+            errorMessage.SetActive(true);
+            errorMessageText.text = "Max MP";
+            errorMessageTime = Time.time;
+            return false;
+        }
+
+        playerStatus.ChangeMana(item.effectValue + playerStatus.currentMP);
         return true;
     }
 

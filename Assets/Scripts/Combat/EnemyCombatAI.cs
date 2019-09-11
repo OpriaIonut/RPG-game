@@ -23,7 +23,7 @@ public class EnemyCombatAI : MonoBehaviour
 
     #endregion
 
-    public float criticalFactorCorrection = 4;      //When we have max dexterity(100) we have a 25% chance to give a critical hit
+    public float criticalFactorCorrection = 5;      //When we have max dexterity(152) we have a 30% chance to give a critical hit
 
     private TurnBaseScript turnManager;
     private Status[] playerParty;                   //Retains the status for the targets
@@ -54,7 +54,7 @@ public class EnemyCombatAI : MonoBehaviour
 
         //First pick the target
         //To do: make it pick targets according to certain criteria
-        int targetIndex = UnityEngine.Random.Range(0, playerParty.Length - 1);
+        int targetIndex = UnityEngine.Random.Range(0, playerParty.Length);
         playerParty[targetIndex].turnIndicator.enabled = true;
 
         //Wait a while

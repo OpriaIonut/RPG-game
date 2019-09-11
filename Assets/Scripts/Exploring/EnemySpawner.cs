@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject[] enemyToSpawn;     //EnemyPrefab
-    public Transform[] spawnPoints;     //Each spawnpoint will have at most one child
+    public SpawnPoint[] spawnPoints;     //Each spawnpoint will have at most one child
     public float spawnDelay;            //Delay to spawn an enemy after we have encountered it
 
     private PauseMenu pauseMenu;
@@ -26,22 +25,28 @@ public class EnemySpawner : MonoBehaviour
             else
             {
                 //Otherwise spawn it instantly
-                int enemyIndex = Random.Range(0, enemyToSpawn.Length);
-                MapEnemyMovement clone = Instantiate(enemyToSpawn[enemyIndex], spawnPoints[index]).GetComponent<MapEnemyMovement>();
-                clone.enemyIndex = index;
-                pauseMenu.AddEnemyMovementScript(ref clone);
+                SpawnEnemy(index);
             }
         }
+    }
+
+    public void SpawnEnemy(int index)
+    {
+        int enemyIndex = Random.Range(0, spawnPoints[index].possibleEnemies.Length);
+        MapEnemyMovement clone = Instantiate(spawnPoints[index].possibleEnemiesPrefab[enemyIndex], spawnPoints[index].transform).GetComponent<MapEnemyMovement>();
+
+        EnemyEncounterHolder enemyEncounterScript = clone.GetComponent<EnemyEncounterHolder>();
+        clone.enemyIndex = index;
+
+        enemyEncounterScript.GenerateEnemies(spawnPoints[index]);
+        pauseMenu.AddEnemyMovementScript(ref clone);
     }
 
     //Index is the index for the spawnPoint
     private IEnumerator SpawnWithDelay(int index)
     {
         yield return new WaitForSeconds(spawnDelay);
-        int enemyIndex = Random.Range(0, enemyToSpawn.Length);      //Get a random enemy to spawn
-        MapEnemyMovement clone = Instantiate(enemyToSpawn[index], spawnPoints[index]).GetComponent<MapEnemyMovement>();
-        clone.enemyIndex = index;                                   //Spawn it and set it's index to what it's supposed to be
-        pauseMenu.AddEnemyMovementScript(ref clone);                //Add it's script to the pause menu list so that we can pause the game safely
+        SpawnEnemy(index);
         dataRetainer.DeleteEncounter(index);    //The enemy has been spawned so we need to delete it from our defeatedEnemiesIndex list
     }
 }

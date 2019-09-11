@@ -228,16 +228,16 @@ public class EquipmentMenu : MonoBehaviour
             switch (selectedPlayerIndex)
             {
                 case 0:
-                    selectedPlayerType = PlayerType.Player1;
+                    selectedPlayerType = PlayerType.Demon;
                     break;
                 case 1:
-                    selectedPlayerType = PlayerType.Player2;
+                    selectedPlayerType = PlayerType.Elf;
                     break;
                 case 2:
-                    selectedPlayerType = PlayerType.Player3;
+                    selectedPlayerType = PlayerType.Beastgirl;
                     break;
                 case 3:
-                    selectedPlayerType = PlayerType.Player4;
+                    selectedPlayerType = PlayerType.Warrior;
                     break;
             }
 

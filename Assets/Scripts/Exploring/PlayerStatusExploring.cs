@@ -7,11 +7,13 @@ public class PlayerStatusExploring : MonoBehaviour
 {
     public StatusScriptableObject baseStatus;
     public Image healthBar;
+    public Image mpBar;
+    public Text mpText;
     public Text healthText;
     public int playerIndex;             //Used to diferentiate between players, somewhat better than giving each player a different tag
     
-    [HideInInspector]
-    public int currentHealth;
+    [HideInInspector]   public int currentHealth;
+    [HideInInspector]   public int currentMP;
 
     [HideInInspector]
     public EquipmentHolder equipmentHolder;
@@ -24,8 +26,12 @@ public class PlayerStatusExploring : MonoBehaviour
         
         //Set the UI
         currentHealth = dataRetainer.GetPlayerHealth(playerIndex);
+        currentMP = dataRetainer.GetPlayerMP(playerIndex);
+
         healthBar.fillAmount = (float)currentHealth / (baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
         healthText.text = "" + currentHealth + " / " + (baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
+        mpBar.fillAmount = (float)currentMP / baseStatus.mana;
+        mpText.text = "" + currentMP + " / " + baseStatus.mana;
     }
 
     //Change the health and set the UI
@@ -39,5 +45,17 @@ public class PlayerStatusExploring : MonoBehaviour
             currentHealth = value;
         healthBar.fillAmount = (float)currentHealth / (baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
         healthText.text = "" + currentHealth + " / " + (baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
+    }
+
+    public void ChangeMana(int value)
+    {
+        if (value > baseStatus.mana)
+            currentMP = baseStatus.mana;
+        else if (value < 0)
+            currentMP = 0;
+        else
+            currentMP = value;
+        mpBar.fillAmount = (float)currentMP / baseStatus.mana;
+        mpText.text = "" + currentMP + " / " + baseStatus.mana;
     }
 }

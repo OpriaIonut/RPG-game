@@ -27,7 +27,7 @@ public class CombatScript : MonoBehaviour
 
     //To do: make boss fights unavoidable
     public int runAwayProbability = 30;             //The probability to run away from a battle
-    public float criticalFactorCorrection = 4;      //When we have max dexterity(100) we have a 25% chance to give a critical hit
+    public float criticalFactorCorrection = 5;      //When we have max dexterity(152) we have a 30% chance to give a critical hit
     public GameObject combatButtons;                //Reference to player buttons so we can disable and enable them on player turn
     public float inputWaitTime = 0.1f;              //How often to check for input
     public ItemMenuCombat itemMenu;

@@ -11,11 +11,14 @@ public class Status : MonoBehaviour
      */
     public StatusScriptableObject baseStatus;   //The status of the character
     public Image turnIndicator;                 //Used to indicate the current turn and also the target when picking a target
-    public Image healthBar;
+    public GameObject healthBar;
+    public Image healthBarFill;
+    public Image mpBar;
+    public Text mpText;
     public Text healthText;
     public Text damageText;
-    public float defenseFactorCorrection = 10f; // At max defense (100) you take 1/10 of the damage
-    public float dodgeFactorCorrection = 10f;   // At max speed (100) you have a 1/10 chance to dodge
+    public float defenseFactorCorrection = 10.8f; // At max defense (100) you take 1/10 of the damage
+    public float dodgeFactorCorrection = 10.8f;   // At max speed (100) you have a 1/10 chance to dodge
     public int playerIndex;
     public bool dead = false;
 
@@ -23,7 +26,9 @@ public class Status : MonoBehaviour
     public bool guarding = false;   //Will become true when the player selects to guard, it halves the damage
 
     //These variables will hold the total status of the player (base status + equipment status)
+    [HideInInspector] public int level;
     [HideInInspector] public int health;        //Current health
+    [HideInInspector] public int currentMp;
     [HideInInspector] public int maxHealth;     
     [HideInInspector] public int defense;
     [HideInInspector] public int speed;
@@ -38,6 +43,7 @@ public class Status : MonoBehaviour
 
     private void Start()
     {
+        healthBar.SetActive(true);
         //Initialize variables
         meshRender = GetComponent<MeshRenderer>();
         //Calculate all status variables
@@ -47,6 +53,7 @@ public class Status : MonoBehaviour
             equipmentHolder = EquipmentHolder.instance;
             dataRetainer = DataRetainer.instance;
             health = dataRetainer.GetPlayerHealth(playerIndex);
+            currentMp = dataRetainer.GetPlayerMP(playerIndex);
 
             maxHealth = baseStatus.health + equipmentHolder.playersHealth[playerIndex];
             speed = baseStatus.speed + equipmentHolder.playersSpeed[playerIndex];
@@ -59,6 +66,7 @@ public class Status : MonoBehaviour
         {
             //If it is an enemy we add just it's base status
             health = baseStatus.health;
+            currentMp = baseStatus.mana;
             maxHealth = baseStatus.health;
             defense = baseStatus.defense;
             speed = baseStatus.speed;
@@ -68,8 +76,10 @@ public class Status : MonoBehaviour
         }
         //Set the UI
         damageText.text = "";
-        healthBar.fillAmount = (float)health / maxHealth;
+        healthBarFill.fillAmount = (float)health / maxHealth;
         healthText.text = "" + health + "/" + maxHealth;
+        mpBar.fillAmount = (float)currentMp / baseStatus.mana;
+        mpText.text = "" + currentMp + "/" + baseStatus.mana;
 
         enemyCombatAI = EnemyCombatAI.instance;
     }
@@ -103,8 +113,26 @@ public class Status : MonoBehaviour
             health = maxHealth;
 
         //Update the UI
-        healthBar.fillAmount = (float)health / maxHealth;
+        healthBarFill.fillAmount = (float)health / maxHealth;
         healthText.text = "" + health + "/" + maxHealth;
+        return true;
+    }
+
+    public bool RestoreMP(ItemScriptable item)
+    {
+        if (health == 0)
+            return false;
+
+        if (currentMp == baseStatus.mana)
+            return false;
+
+        if (item.effectValue + currentMp > baseStatus.mana)
+            currentMp = baseStatus.mana;
+        else
+            currentMp += item.effectValue;
+
+        mpBar.fillAmount = (float)currentMp / baseStatus.mana;
+        mpText.text = "" + currentMp + "/" + baseStatus.mana;
         return true;
     }
 
@@ -144,7 +172,7 @@ public class Status : MonoBehaviour
         damageText.text = "" + damage;
 
         healthText.text = "" + health + "/" + maxHealth;
-        healthBar.fillAmount = (float)health / maxHealth;
+        healthBarFill.fillAmount = (float)health / maxHealth;
 
         //Disable the damage text after a second
         StartCoroutine(DisableUI(1f));
@@ -157,6 +185,7 @@ public class Status : MonoBehaviour
             healthText.text = "";
             damageText.text = "";
             meshRender.enabled = false;
+            healthBar.SetActive(false);
             return true;
         }
         else

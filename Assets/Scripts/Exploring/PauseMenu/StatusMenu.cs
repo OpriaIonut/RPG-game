@@ -107,12 +107,12 @@ public class StatusMenu : MonoBehaviour
         //xpBar.fillAmount = 
         //xpText.text = "" + 
         hpText.text = "HP: " + (playerStatus[playerIndex].baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
-        //mpText.text = "" + 
-        vitText.text = "VIT: " + playerStatus[playerIndex].baseStatus.health;
-        defText.text = "DEF: " + (playerStatus[playerIndex].baseStatus.defense + equipmentHolder.playersDefense[playerIndex]);
-        agiText.text = "AGI: " + (playerStatus[playerIndex].baseStatus.speed + equipmentHolder.playersSpeed[playerIndex]);
-        strText.text = "STR: " + (playerStatus[playerIndex].baseStatus.strength + equipmentHolder.playersStrength[playerIndex]);
-        intText.text = "INT: " + (playerStatus[playerIndex].baseStatus.intelligence + equipmentHolder.playersIntelligence[playerIndex]);
-        dexText.text = "DEX: " + (playerStatus[playerIndex].baseStatus.dexterity + equipmentHolder.playersDexterity[playerIndex]);
+        mpText.text = "MP: " + playerStatus[playerIndex].baseStatus.mana ;
+        vitText.text = "VIT: " + playerStatus[playerIndex].baseStatus.health + " (" + equipmentHolder.playersHealth[playerIndex] + ")";
+        defText.text = "DEF: " + playerStatus[playerIndex].baseStatus.defense + " (" + equipmentHolder.playersDefense[playerIndex] + ")";
+        agiText.text = "AGI: " + playerStatus[playerIndex].baseStatus.speed +  " (" + equipmentHolder.playersSpeed[playerIndex] + ")";
+        strText.text = "STR: " + playerStatus[playerIndex].baseStatus.strength + " (" + equipmentHolder.playersStrength[playerIndex] + ")";
+        intText.text = "INT: " + playerStatus[playerIndex].baseStatus.intelligence + " (" + equipmentHolder.playersIntelligence[playerIndex] + ")";
+        dexText.text = "DEX: " + playerStatus[playerIndex].baseStatus.dexterity + " (" + equipmentHolder.playersDexterity[playerIndex] + ")";
     }
 }

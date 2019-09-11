@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -2834911834965027273}
   - component: {fileID: 3011838724217336635}
   - component: {fileID: 3012866292286283621}
+  - component: {fileID: 1355499834638801795}
   m_Layer: 8
   m_Name: Slime_blue
   m_TagString: Enemy
@@ -156,6 +157,19 @@ MonoBehaviour:
   movementRadius: 10
   idleTime: 5
   enemyIndex: 0
+--- !u!114 &1355499834638801795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3685130057845482195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec39f1a8decb9c4184d83a371ff507b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemies: []
 --- !u!64 &6622077632724126825
 MeshCollider:
   m_ObjectHideFlags: 0

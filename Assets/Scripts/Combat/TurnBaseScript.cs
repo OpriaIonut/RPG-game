@@ -283,8 +283,11 @@ public class TurnBaseScript : MonoBehaviour
         foreach(Status status in characters)
         {
             if (status.gameObject.tag == "Player")
+            {
                 dataRetainer.SetPlayerHealth(status.playerIndex, status.health);
-        }
+                dataRetainer.SetPlayerMP(status.playerIndex, status.currentMp);
+            }
+            }
         StartCoroutine(ChangeSceneWithDelay("Battle won", 2f));
     }
 
@@ -293,7 +296,10 @@ public class TurnBaseScript : MonoBehaviour
         foreach (Status status in characters)
         {
             if (status.gameObject.tag == "Player")
+            {
                 dataRetainer.SetPlayerHealth(status.playerIndex, status.health);
+                dataRetainer.SetPlayerMP(status.playerIndex, status.currentMp);
+            }
         }
         StartCoroutine(ChangeSceneWithDelay("Battle lost", 2f));
     }
@@ -303,7 +309,10 @@ public class TurnBaseScript : MonoBehaviour
         foreach (Status status in characters)
         {
             if (status.gameObject.tag == "Player")
+            {
                 dataRetainer.SetPlayerHealth(status.playerIndex, status.health);
+                dataRetainer.SetPlayerMP(status.playerIndex, status.currentMp);
+            }
         }
         StartCoroutine(ChangeSceneWithDelay("Run away", 2f));
     }

@@ -62,11 +62,28 @@ public class InventoryMenu : MonoBehaviour
                     }
                     else if (eventSys.currentSelectedGameObject != playerSelectHiddenButton)
                     {
-                        //Else if we are selecting the player and we are not focusing the hidden button
-                        //Try to heal/revive the player
-                        bool success = eventSys.currentSelectedGameObject.GetComponent<PlayerSelectMenuButton>().ChangeHealth(inventory.items[selectedItemIndex].first);
-                       
-                        if (success)
+                        bool itemUsed = false;
+
+                        if(inventory.items[selectedItemIndex].first.recoverHP == true)
+                        {
+                            bool success = eventSys.currentSelectedGameObject.GetComponent<PlayerSelectMenuButton>().ChangeHealth(inventory.items[selectedItemIndex].first);
+
+                            if (success)
+                            {
+                                itemUsed = true;
+                            }
+                        }
+                        if(inventory.items[selectedItemIndex].first.recoverMana == true)
+                        {
+                            bool success = eventSys.currentSelectedGameObject.GetComponent<PlayerSelectMenuButton>().ChangeMana(inventory.items[selectedItemIndex].first);
+
+                            if (success)
+                            {
+                                itemUsed = true;
+                            }
+                        }
+
+                        if (itemUsed)
                         {
                             //If we are successful, stop selecting the player, decrease the item count of the used item
                             //To do: In the future make items usable multiple times without deactivating the player select menu
@@ -88,7 +105,6 @@ public class InventoryMenu : MonoBehaviour
                             eventSys.SetSelectedGameObject(hiddenButton);
                             description.text = "";
                         }
-                        //The cases where we have failed to heal the player are taken care of in the 'ChangeHealth' fct... i know, bad architecture...
                     }
                 }
             }

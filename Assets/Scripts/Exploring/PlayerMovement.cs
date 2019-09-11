@@ -81,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
             foreach (PlayerStatusExploring status in playerStatus)
             {
                 dataRetainer.SetPlayerHealth(status.playerIndex, status.currentHealth);
+                dataRetainer.SetPlayerMP(status.playerIndex, status.currentMP);
                 dataRetainer.SetPlayerPosition(status.playerIndex, status.gameObject.transform.position);
             }
             //Check if we encountered the same enemy before and it hasn't respawned yet
@@ -89,6 +90,8 @@ public class PlayerMovement : MonoBehaviour
                 //If it has respawned, remember it's index so that we can spawn it with a delay next time we load this scene
                 dataRetainer.AddEncounter(other.gameObject.GetComponent<MapEnemyMovement>().enemyIndex);
             }
+
+            dataRetainer.SaveEncounter(other.GetComponent<EnemyEncounterHolder>());
 
             //Load scene to delay so we can finish the animation
             StartCoroutine(LoadSceneWithDelay(2f));

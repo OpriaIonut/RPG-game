@@ -8,6 +8,8 @@ public class ItemScriptable : ScriptableObject
     public string itemName;
     public bool revival;
     public bool effectWithPercentage;
+    public bool recoverMana;
+    public bool recoverHP;
     public int effectValue;
     public string description;
     public int itemIndex;       //Useful for sorting inventory

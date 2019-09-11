@@ -18,10 +18,10 @@ public enum EquipmentType
 //Used by multiple scripts to define player types
 public enum PlayerType
 {
-    Player1,
-    Player2,
-    Player3,
-    Player4
+    Demon,
+    Elf,
+    Beastgirl,
+    Warrior
 };
 
 [CreateAssetMenu(fileName = "Equipment", menuName = "ScriptableObjects/Equipment")]

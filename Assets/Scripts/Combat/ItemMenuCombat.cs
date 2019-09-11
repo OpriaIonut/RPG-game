@@ -138,11 +138,32 @@ public class ItemMenuCombat : MonoBehaviour
                     }
                     else
                     {
-                        //Else, we have picked a player to use the item on, try to restore it's HP
-                        bool success = playersStatus[selectedPlayerIndex].RestoreHP(inventory.items[selectedItemIndex].first);
+                        bool itemUsed = false;
 
-                        //If it was a success
-                        if (success)
+                        if (inventory.items[selectedItemIndex].first.recoverHP)
+                        {
+                            //Else, we have picked a player to use the item on, try to restore it's HP
+                            bool success = playersStatus[selectedPlayerIndex].RestoreHP(inventory.items[selectedItemIndex].first);
+
+                            //If it was a success
+                            if (success)
+                            {
+                                itemUsed = true;
+                            }
+                        }
+                        if(inventory.items[selectedItemIndex].first.recoverMana)
+                        {
+                            //Else, we have picked a player to use the item on, try to restore it's MP
+                            bool success = playersStatus[selectedPlayerIndex].RestoreMP(inventory.items[selectedItemIndex].first);
+
+                            //If it was a success
+                            if (success)
+                            {
+                                itemUsed = true;
+                            }
+                        }
+
+                        if(itemUsed)
                         {
                             //Stop selecting the player
                             SelectingPlayer(false);
@@ -168,13 +189,23 @@ public class ItemMenuCombat : MonoBehaviour
                             //If it wass not a success show an error message
                             errorMessage[selectedPlayerIndex].SetActive(true);
 
-                            //Identify what type of error it is
-                            if (inventory.items[selectedItemIndex].first.revival)
-                                errorMessageText[selectedPlayerIndex].text = "Cannot revive";
-                            else if (playersStatus[selectedPlayerIndex].health == 0)
-                                errorMessageText[selectedPlayerIndex].text = "Player is dead";
-                            else
-                                errorMessageText[selectedPlayerIndex].text = "Player has full HP";
+                            if (inventory.items[selectedItemIndex].first.recoverHP == true)
+                            {
+                                //Identify what type of error it is
+                                if (inventory.items[selectedItemIndex].first.revival)
+                                    errorMessageText[selectedPlayerIndex].text = "Cannot revive";
+                                else if (playersStatus[selectedPlayerIndex].health == 0)
+                                    errorMessageText[selectedPlayerIndex].text = "Player is dead";
+                                else if (playersStatus[selectedPlayerIndex].health == playersStatus[selectedPlayerIndex].maxHealth)
+                                    errorMessageText[selectedPlayerIndex].text = "Player has full HP";
+                            }
+                            if(inventory.items[selectedItemIndex].first.recoverMana == true)
+                            {
+                                if(playersStatus[selectedPlayerIndex].health == 0)
+                                    errorMessageText[selectedPlayerIndex].text = "Player is dead";
+                                else if (playersStatus[selectedPlayerIndex].currentMp == playersStatus[selectedPlayerIndex].baseStatus.mana)
+                                    errorMessageText[selectedPlayerIndex].text = "Max MP";
+                            }
 
                             //Add it's time to the list so that we can deactivate it
                             errorMessageTime.Add(new Pair<GameObject, float>(errorMessage[selectedPlayerIndex], Time.time));
