@@ -3109,8 +3109,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 87.5, y: -125}
-  m_SizeDelta: {x: 125, y: 50}
+  m_AnchoredPosition: {x: 87.26553, y: -125}
+  m_SizeDelta: {x: 124.53107, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &405045363
 MonoBehaviour:
@@ -3489,8 +3489,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 41.877914, y: -25}
-  m_SizeDelta: {x: 83.75583, y: 50}
+  m_AnchoredPosition: {x: 42.031067, y: -25}
+  m_SizeDelta: {x: 84.06213, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &419852429
 MonoBehaviour:
@@ -4299,8 +4299,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 87.5, y: -75}
-  m_SizeDelta: {x: 175, y: 150}
+  m_AnchoredPosition: {x: 87.26553, y: -75}
+  m_SizeDelta: {x: 174.53107, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &479332545
 MonoBehaviour:
@@ -4668,7 +4668,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Player 1
+  m_Text: Demon
 --- !u!222 &503575521
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5440,8 +5440,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 262.5, y: -75}
-  m_SizeDelta: {x: 175, y: 150}
+  m_AnchoredPosition: {x: 262.26553, y: -75}
+  m_SizeDelta: {x: 175.46893, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &652721384
 MonoBehaviour:
@@ -6239,8 +6239,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 87.5, y: -25}
-  m_SizeDelta: {x: 125, y: 50}
+  m_AnchoredPosition: {x: 87.73447, y: -25}
+  m_SizeDelta: {x: 125.46893, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &753914420
 MonoBehaviour:
@@ -7960,8 +7960,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 87.5, y: -125}
-  m_SizeDelta: {x: 125, y: 50}
+  m_AnchoredPosition: {x: 87.73447, y: -125}
+  m_SizeDelta: {x: 125.46893, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1105201097
 MonoBehaviour:
@@ -8075,7 +8075,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Player 4
+  m_Text: Warrior
 --- !u!222 &1119755890
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10207,8 +10207,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 126.877914, y: -25}
-  m_SizeDelta: {x: 86.24417, y: 50}
+  m_AnchoredPosition: {x: 127.03107, y: -25}
+  m_SizeDelta: {x: 85.93787, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1312312517
 MonoBehaviour:
@@ -11603,7 +11603,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Player 3
+  m_Text: Beastgirl
 --- !u!222 &1462826770
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11859,7 +11859,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1488709798
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12021,7 +12021,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Player 2
+  m_Text: Elf
 --- !u!222 &1517064419
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12257,8 +12257,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 87.5, y: -25}
-  m_SizeDelta: {x: 125, y: 50}
+  m_AnchoredPosition: {x: 87.26553, y: -25}
+  m_SizeDelta: {x: 124.53107, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1532935279
 MonoBehaviour:
@@ -13529,8 +13529,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 87.5, y: -75}
-  m_SizeDelta: {x: 125, y: 50}
+  m_AnchoredPosition: {x: 87.26553, y: -75}
+  m_SizeDelta: {x: 124.53107, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1751647622
 MonoBehaviour:
@@ -14205,8 +14205,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 87.5, y: -75}
-  m_SizeDelta: {x: 125, y: 50}
+  m_AnchoredPosition: {x: 87.73447, y: -75}
+  m_SizeDelta: {x: 125.46893, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1852453255
 MonoBehaviour:
@@ -16544,6 +16544,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 86a8640cd097fa143839eb75db1877a4, type: 2}
   - {fileID: 11400000, guid: 0994ecbfdfc95cd44883a9e15d20fe17, type: 2}
   - {fileID: 11400000, guid: 67701a4a3929dc148abbe490a8e72df5, type: 2}
+  gold: 0
 --- !u!114 &2105536671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17081,6 +17082,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4042150779311611534, guid: 7449c68647dfa76449b035bbaf5611e5,
+        type: 3}
+      propertyPath: mainPlayerTransform
+      value: 
+      objectReference: {fileID: 1499614101}
+    - target: {fileID: 4042150779311611534, guid: 7449c68647dfa76449b035bbaf5611e5,
+        type: 3}
+      propertyPath: canvasAnim
+      value: 
+      objectReference: {fileID: 1192217122}
     - target: {fileID: 1375193906121948746, guid: 7449c68647dfa76449b035bbaf5611e5,
         type: 3}
       propertyPath: healthBar
@@ -17101,16 +17112,6 @@ PrefabInstance:
       propertyPath: mpText
       value: 
       objectReference: {fileID: 1003818399}
-    - target: {fileID: 4042150779311611534, guid: 7449c68647dfa76449b035bbaf5611e5,
-        type: 3}
-      propertyPath: mainPlayerTransform
-      value: 
-      objectReference: {fileID: 1499614101}
-    - target: {fileID: 4042150779311611534, guid: 7449c68647dfa76449b035bbaf5611e5,
-        type: 3}
-      propertyPath: canvasAnim
-      value: 
-      objectReference: {fileID: 1192217122}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7449c68647dfa76449b035bbaf5611e5, type: 3}
 --- !u!1001 &3428060459640844213
@@ -17180,6 +17181,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 532036711278327239, guid: e588fdb6881847846b9b938b1cdd6148,
+        type: 3}
+      propertyPath: mainPlayerTransform
+      value: 
+      objectReference: {fileID: 1499614101}
+    - target: {fileID: 532036711278327239, guid: e588fdb6881847846b9b938b1cdd6148,
+        type: 3}
+      propertyPath: canvasAnim
+      value: 
+      objectReference: {fileID: 1192217122}
     - target: {fileID: 3428060459020430877, guid: e588fdb6881847846b9b938b1cdd6148,
         type: 3}
       propertyPath: healthBar
@@ -17200,16 +17211,6 @@ PrefabInstance:
       propertyPath: mpText
       value: 
       objectReference: {fileID: 928317766}
-    - target: {fileID: 532036711278327239, guid: e588fdb6881847846b9b938b1cdd6148,
-        type: 3}
-      propertyPath: mainPlayerTransform
-      value: 
-      objectReference: {fileID: 1499614101}
-    - target: {fileID: 532036711278327239, guid: e588fdb6881847846b9b938b1cdd6148,
-        type: 3}
-      propertyPath: canvasAnim
-      value: 
-      objectReference: {fileID: 1192217122}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e588fdb6881847846b9b938b1cdd6148, type: 3}
 --- !u!1001 &6891989488444532254
@@ -17279,6 +17280,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4609733919286520537, guid: e999746e706da4f469f6788a706ae2e7,
+        type: 3}
+      propertyPath: canvasAnim
+      value: 
+      objectReference: {fileID: 1192217122}
     - target: {fileID: 6891989489083441675, guid: e999746e706da4f469f6788a706ae2e7,
         type: 3}
       propertyPath: healthBar
@@ -17299,10 +17305,5 @@ PrefabInstance:
       propertyPath: mpText
       value: 
       objectReference: {fileID: 23027830}
-    - target: {fileID: 4609733919286520537, guid: e999746e706da4f469f6788a706ae2e7,
-        type: 3}
-      propertyPath: canvasAnim
-      value: 
-      objectReference: {fileID: 1192217122}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e999746e706da4f469f6788a706ae2e7, type: 3}

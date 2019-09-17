@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="BaseStatus", menuName ="ScriptableObjects/BaseStatus")]
 public class StatusScriptableObject : ScriptableObject
 {
-    public int level;   //Based on this we will calculate the current status for the characters
     public int health, mana, defense, speed, strength, intelligence, dexterity;
     public int xp;      //For player it will hold the xp needed for next level up, for enemy it will hold xp given
 

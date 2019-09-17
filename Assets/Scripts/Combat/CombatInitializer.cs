@@ -20,7 +20,7 @@ public class CombatInitializer : MonoBehaviour
             if (enemy1[index].baseStatus == dataRetainer.enemiesEncountered[0])
             {
                 enemy1[index].gameObject.SetActive(true);
-                enemy1[index].level = dataRetainer.enemiesEncounteredLevel[0];
+                enemy1[index].playerLevel = dataRetainer.enemiesEncounteredLevel[0];
                 break;
             }
         }
@@ -29,7 +29,7 @@ public class CombatInitializer : MonoBehaviour
             if (enemy2[index].baseStatus == dataRetainer.enemiesEncountered[1])
             {
                 enemy2[index].gameObject.SetActive(true);
-                enemy2[index].level = dataRetainer.enemiesEncounteredLevel[1];
+                enemy2[index].playerLevel = dataRetainer.enemiesEncounteredLevel[1];
                 break;
             }
         }
@@ -38,7 +38,7 @@ public class CombatInitializer : MonoBehaviour
             if (enemy3[index].baseStatus == dataRetainer.enemiesEncountered[2])
             {
                 enemy3[index].gameObject.SetActive(true);
-                enemy3[index].level = dataRetainer.enemiesEncounteredLevel[2];
+                enemy3[index].playerLevel = dataRetainer.enemiesEncounteredLevel[2];
                 break;
             }
         }
@@ -47,7 +47,7 @@ public class CombatInitializer : MonoBehaviour
             if (enemy4[index].baseStatus == dataRetainer.enemiesEncountered[3])
             {
                 enemy4[index].gameObject.SetActive(true);
-                enemy4[index].level = dataRetainer.enemiesEncounteredLevel[3];
+                enemy4[index].playerLevel = dataRetainer.enemiesEncounteredLevel[3];
                 break;
             }
         }

@@ -25,6 +25,8 @@ public class Inventory : MonoBehaviour
     //This bool will be set by the "EquipmentHolder" script after it instantiates everything
     public List<Pair<EquipmentScriptable, bool>> equipments = new List<Pair<EquipmentScriptable, bool>>();
 
+    public int gold = 0;
+
     #region Singleton
 
     public static Inventory instance;
@@ -132,5 +134,10 @@ public class Inventory : MonoBehaviour
             description += " HP";
 
         return description;
+    }
+
+    public void AddGold(int ammount)
+    {
+        gold += ammount;
     }
 }

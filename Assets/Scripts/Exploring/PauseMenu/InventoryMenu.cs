@@ -151,7 +151,7 @@ public class InventoryMenu : MonoBehaviour
         for(int index = 0; index < itemSlots.Count; index++)
         {
             itemSlots[index].transform.GetChild(0).GetComponent<Text>().text = "" + inventory.items[index].first.itemName;
-            itemSlots[index].transform.GetChild(1).GetComponent<Text>().text = "" + inventory.items[index].second;
+            itemSlots[index].transform.GetChild(1).GetComponent<Text>().text = "x" + inventory.items[index].second;
         }
     }
 }

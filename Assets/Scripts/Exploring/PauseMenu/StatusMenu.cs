@@ -49,11 +49,8 @@ public class StatusMenu : MonoBehaviour
     {
         defaultTabColor = playerTabs[0].color;
         equipmentHolder = EquipmentHolder.instance;
-
-        UpdateUI();
+        
         playerTabs[playerIndex].color = selectedTabColor;
-
-        StartCoroutine(MyUpdate());
     }
 
     private void Update()
@@ -84,35 +81,25 @@ public class StatusMenu : MonoBehaviour
         }
     }
 
-    private IEnumerator MyUpdate()
-    {
-        while(true)
-        {
-            if(statusMenuActive)
-            {
-
-            }
-            yield return new WaitForSeconds(0.1f);
-        }
-    }
-
     public void ToggleStatusMenu(bool value)
     {
         statusMenuActive = value;
+        if(value == true)
+            UpdateUI();
     }
 
     public void UpdateUI()
     {
-        levelText.text = "Level " + playerStatus[playerIndex].baseStatus.level;
-        //xpBar.fillAmount = 
-        //xpText.text = "" + 
-        hpText.text = "HP: " + (playerStatus[playerIndex].baseStatus.health + equipmentHolder.playersHealth[playerIndex]);
-        mpText.text = "MP: " + playerStatus[playerIndex].baseStatus.mana ;
-        vitText.text = "VIT: " + playerStatus[playerIndex].baseStatus.health + " (" + equipmentHolder.playersHealth[playerIndex] + ")";
-        defText.text = "DEF: " + playerStatus[playerIndex].baseStatus.defense + " (" + equipmentHolder.playersDefense[playerIndex] + ")";
-        agiText.text = "AGI: " + playerStatus[playerIndex].baseStatus.speed +  " (" + equipmentHolder.playersSpeed[playerIndex] + ")";
-        strText.text = "STR: " + playerStatus[playerIndex].baseStatus.strength + " (" + equipmentHolder.playersStrength[playerIndex] + ")";
-        intText.text = "INT: " + playerStatus[playerIndex].baseStatus.intelligence + " (" + equipmentHolder.playersIntelligence[playerIndex] + ")";
-        dexText.text = "DEX: " + playerStatus[playerIndex].baseStatus.dexterity + " (" + equipmentHolder.playersDexterity[playerIndex] + ")";
+        levelText.text = "Level " + playerStatus[playerIndex].playerLevel;
+        xpBar.fillAmount = (float)playerStatus[playerIndex].currentXP / playerStatus[playerIndex].xpNeeded;
+        xpText.text = "" + playerStatus[playerIndex].currentXP + "/" + playerStatus[playerIndex].xpNeeded;
+        hpText.text = "HP: " + playerStatus[playerIndex].maxHealth;
+        mpText.text = "MP: " + playerStatus[playerIndex].maxMP;
+        vitText.text = "VIT: " + playerStatus[playerIndex].maxHealth + " (" + equipmentHolder.playersHealth[playerIndex] + ")";
+        defText.text = "DEF: " + playerStatus[playerIndex].defense + " (" + equipmentHolder.playersDefense[playerIndex] + ")";
+        agiText.text = "AGI: " + playerStatus[playerIndex].speed +  " (" + equipmentHolder.playersSpeed[playerIndex] + ")";
+        strText.text = "STR: " + playerStatus[playerIndex].strength + " (" + equipmentHolder.playersStrength[playerIndex] + ")";
+        intText.text = "INT: " + playerStatus[playerIndex].intelligence + " (" + equipmentHolder.playersIntelligence[playerIndex] + ")";
+        dexText.text = "DEX: " + playerStatus[playerIndex].dexterity + " (" + equipmentHolder.playersDexterity[playerIndex] + ")";
     }
 }

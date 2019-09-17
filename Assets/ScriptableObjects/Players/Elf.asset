@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10f5c83eda9934f478672539b3fc9119, type: 3}
   m_Name: Elf
   m_EditorClassIdentifier: 
-  level: 1
   health: 8
   mana: 12
   defense: 6
@@ -20,7 +19,7 @@ MonoBehaviour:
   strength: 5
   intelligence: 6
   dexterity: 8
-  xp: 100
+  xp: 5
   gold: 0
   minLevel: 0
   maxLevel: 0

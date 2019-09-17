@@ -30,10 +30,10 @@ public class PlayerSelectMenuButton : MonoBehaviour
         
         //Update the UI. The code got pretty complex from adding the equipment functionality so I added this in update
         //If there are problems with efficiency, change this
-        healthbar.fillAmount = (float)playerStatus.currentHealth / (playerStatus.baseStatus.health + playerStatus.equipmentHolder.playersHealth[playerStatus.playerIndex]);
-        healthText.text = "" + playerStatus.currentHealth + " / " + (playerStatus.baseStatus.health + playerStatus.equipmentHolder.playersHealth[playerStatus.playerIndex]);
-        mpBar.fillAmount = (float)playerStatus.currentMP / playerStatus.baseStatus.mana;
-        mpText.text = "" + playerStatus.currentMP + " / " + playerStatus.baseStatus.mana;
+        healthbar.fillAmount = (float)playerStatus.currentHealth / playerStatus.maxHealth;
+        healthText.text = "" + playerStatus.currentHealth + " / " + playerStatus.maxHealth;
+        mpBar.fillAmount = (float)playerStatus.currentMP / playerStatus.maxMP;
+        mpText.text = "" + playerStatus.currentMP + " / " + playerStatus.maxMP;
     }
 
     //Called after selecting a player by the InventoryMenu script
@@ -49,7 +49,7 @@ public class PlayerSelectMenuButton : MonoBehaviour
         }
 
         //If we have max health write an error message and return false
-        if (playerStatus.currentHealth == (playerStatus.baseStatus.health + playerStatus.equipmentHolder.playersHealth[playerStatus.playerIndex]))
+        if (playerStatus.currentHealth == playerStatus.maxHealth)
         {
             errorMessage.SetActive(true);
             errorMessageTime = Time.time;
@@ -69,7 +69,7 @@ public class PlayerSelectMenuButton : MonoBehaviour
 
     public bool ChangeMana(ItemScriptable item)
     {
-        if(playerStatus.currentMP == playerStatus.baseStatus.mana)
+        if(playerStatus.currentMP == playerStatus.maxMP)
         {
             errorMessage.SetActive(true);
             errorMessageText.text = "Max MP";

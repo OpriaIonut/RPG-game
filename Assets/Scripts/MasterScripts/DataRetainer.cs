@@ -16,6 +16,9 @@ public class DataRetainer : MonoBehaviour
     private Vector3[] playersPosition;              //Remembers the player's position when passing through scenes
     private EquipmentHolder equipmentHolder;
 
+    private int[] playersXP = new int[4];
+    private int[] playersLevel = new int[4];
+
     #region Singleton and Initialization
 
     public static DataRetainer instance;
@@ -44,9 +47,31 @@ public class DataRetainer : MonoBehaviour
         playersPosition = new Vector3[playersTransform.Length];
         for (int index = 0; index < playersHealth.Length; index++)
         {
-            playersHealth[index] = playerStatus[index].baseStatus.health + equipmentHolder.playersHealth[playerStatus[index].playerIndex];
-            playersMP[index] = playerStatus[index].baseStatus.mana;
+            playersLevel[index] = 1;
+
+            playersHealth[index] = playerStatus[index].baseStatus.health + (int)(((playersLevel[index] / 10.0) + playerStatus[index].baseStatus.health / 8.0) * playersLevel[index]) + equipmentHolder.playersHealth[playerStatus[index].playerIndex];
+            playersMP[index] = 2 * (int)(playerStatus[index].baseStatus.intelligence + (playerStatus[index].baseStatus.intelligence / 4.0) * playersLevel[index]);
             playersPosition[index] = playersTransform[index].position;
+        }
+    }
+
+    //Called when we enter an exploring map by the pause menu script
+    public void ExploringInit()
+    {
+        //When we pass scenes we lose the reference to the player status script so we remake it
+        playerStatus = FindObjectsOfType<PlayerStatusExploring>();
+
+        for(int index = 0; index < 3; index++)
+        {
+            for(int index2 = index+1; index2 < 4; index2++)
+            {
+                if(playerStatus[index].playerIndex > playerStatus[index2].playerIndex)
+                {
+                    PlayerStatusExploring aux = playerStatus[index];
+                    playerStatus[index] = playerStatus[index2];
+                    playerStatus[index2] = aux;
+                }
+            }
         }
     }
 
@@ -87,6 +112,34 @@ public class DataRetainer : MonoBehaviour
             playersMP[index] = 1;
         else
             playersMP[index] = value;
+    }
+
+    public int GetPlayerXP(int index)
+    {
+        if (index < 0 || index > 3)
+            return -1;
+        return playersXP[index];
+    }
+    public void SetPlayerXP(int index, int value)
+    {
+        if (index < 0 || index > 3)
+            return;
+
+        playersXP[index] = value;
+    }
+
+    public int GetPlayerLevel(int index)
+    {
+        if (index < 0 || index > 3)
+            return -1;
+        return playersLevel[index];
+    }
+    public void SetPlayerLevel(int index, int value)
+    {
+        if (index < 0 || index > 3)
+            return;
+
+        playersLevel[index] = value;
     }
 
     public void SaveEncounter(EnemyEncounterHolder enemyHolder)

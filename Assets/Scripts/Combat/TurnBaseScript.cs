@@ -48,12 +48,14 @@ public class TurnBaseScript : MonoBehaviour
     private CombatScript combatManager;
     private EnemyCombatAI enemyAI;
     private DataRetainer dataRetainer;
+    private CombatStatistics combatStatistics;
 
     private void Start()
     {
         // Initialize variables
         dataRetainer = DataRetainer.instance;
         combatManager = CombatScript.instance;
+        combatStatistics = CombatStatistics.instance;
         enemyAI = GetComponent<EnemyCombatAI>();
         eventSystem = EventSystem.current;
 
@@ -67,7 +69,7 @@ public class TurnBaseScript : MonoBehaviour
         DefaultInit();                              //Initialize the default turn layout
         StartCoroutine(ChangeTurnsWaitTime(0.5f));  //Start changing turns with delay
     }
-    
+
     public void ChangeTurn()
     {
         //If on the current turn we have a character that has acted
@@ -280,32 +282,21 @@ public class TurnBaseScript : MonoBehaviour
     #region Scene Changers
     public void GameWon()
     {
-        foreach(Status status in characters)
-        {
-            if (status.gameObject.tag == "Player")
-            {
-                dataRetainer.SetPlayerHealth(status.playerIndex, status.health);
-                dataRetainer.SetPlayerMP(status.playerIndex, status.currentMp);
-            }
-            }
-        StartCoroutine(ChangeSceneWithDelay("Battle won", 2f));
+        combatStatistics.EndBattle(false);
     }
 
     public void GameOver()
     {
-        foreach (Status status in characters)
-        {
-            if (status.gameObject.tag == "Player")
-            {
-                dataRetainer.SetPlayerHealth(status.playerIndex, status.health);
-                dataRetainer.SetPlayerMP(status.playerIndex, status.currentMp);
-            }
-        }
         StartCoroutine(ChangeSceneWithDelay("Battle lost", 2f));
     }
 
     public void RunAway()
     {
+        combatStatistics.EndBattle(true);
+    }
+
+    public IEnumerator ChangeSceneWithDelay(string displayText, float waitTime)
+    {
         foreach (Status status in characters)
         {
             if (status.gameObject.tag == "Player")
@@ -314,11 +305,7 @@ public class TurnBaseScript : MonoBehaviour
                 dataRetainer.SetPlayerMP(status.playerIndex, status.currentMp);
             }
         }
-        StartCoroutine(ChangeSceneWithDelay("Run away", 2f));
-    }
 
-    private IEnumerator ChangeSceneWithDelay(string displayText, float waitTime)
-    {
         canvasAnimator.SetTrigger("EndBattle");
         endBattleText.text = displayText;
         yield return new WaitForSeconds(waitTime);

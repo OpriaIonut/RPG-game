@@ -26,60 +26,75 @@ public class Status : MonoBehaviour
     public bool guarding = false;   //Will become true when the player selects to guard, it halves the damage
 
     //These variables will hold the total status of the player (base status + equipment status)
-    [HideInInspector] public int level;
+    [HideInInspector] public int playerLevel;
     [HideInInspector] public int health;        //Current health
     [HideInInspector] public int currentMp;
-    [HideInInspector] public int maxHealth;     
+    [HideInInspector] public int maxHealth;
+    [HideInInspector] public int maxMP;
     [HideInInspector] public int defense;
     [HideInInspector] public int speed;
     [HideInInspector] public int strength;
     [HideInInspector] public int intelligence;
     [HideInInspector] public int dexterity;
 
+    [HideInInspector] public int xpNeeded;
+    [HideInInspector] public float currentXP;
+
     private EquipmentHolder equipmentHolder;
     private EnemyCombatAI enemyCombatAI;
     private MeshRenderer meshRender;        //When the player dies we deactivate it's meshRenderer
     private DataRetainer dataRetainer;
+    private CombatStatistics combatStatistics;
 
     private void Start()
     {
         healthBar.SetActive(true);
+
         //Initialize variables
         meshRender = GetComponent<MeshRenderer>();
+        combatStatistics = CombatStatistics.instance;
+        equipmentHolder = EquipmentHolder.instance;
+        dataRetainer = DataRetainer.instance;
+
+        if (gameObject.tag == "Player")
+        {
+            playerLevel = dataRetainer.GetPlayerLevel(playerIndex);
+        }
+        
+        maxHealth = baseStatus.health + (int)(((playerLevel / 10.0) + baseStatus.health / 8.0) * playerLevel);
+        health = maxHealth;
+        defense = baseStatus.defense + (int)((baseStatus.defense / 4.0) * playerLevel);
+        speed = baseStatus.speed + (int)((baseStatus.speed / 4.0) * playerLevel);
+        strength = baseStatus.strength + (int)((baseStatus.strength / 4.0) * playerLevel);
+        dexterity = baseStatus.dexterity + (int)((baseStatus.dexterity / 4.0) * playerLevel);
+        intelligence = baseStatus.intelligence + (int)((baseStatus.intelligence / 4.0) * playerLevel);
+        maxMP = 2 * intelligence;
+        currentMp = maxMP;
+
         //Calculate all status variables
         if (gameObject.tag == "Player")
         {
             //If it is a player we add the base status + the equipment status
-            equipmentHolder = EquipmentHolder.instance;
-            dataRetainer = DataRetainer.instance;
             health = dataRetainer.GetPlayerHealth(playerIndex);
             currentMp = dataRetainer.GetPlayerMP(playerIndex);
 
-            maxHealth = baseStatus.health + equipmentHolder.playersHealth[playerIndex];
-            speed = baseStatus.speed + equipmentHolder.playersSpeed[playerIndex];
-            defense = baseStatus.defense + equipmentHolder.playersDefense[playerIndex];
-            strength = baseStatus.strength + equipmentHolder.playersStrength[playerIndex];
-            dexterity = baseStatus.dexterity + equipmentHolder.playersDexterity[playerIndex];
-            intelligence = baseStatus.intelligence + equipmentHolder.playersIntelligence[playerIndex];
+            maxHealth += equipmentHolder.playersHealth[playerIndex];
+            speed += equipmentHolder.playersSpeed[playerIndex];
+            defense += equipmentHolder.playersDefense[playerIndex];
+            strength += equipmentHolder.playersStrength[playerIndex];
+            dexterity += equipmentHolder.playersDexterity[playerIndex];
+            intelligence += equipmentHolder.playersIntelligence[playerIndex];
+
+            xpNeeded = baseStatus.xp + (4 * (playerLevel ^ 3)) / 7;
+            currentXP = dataRetainer.GetPlayerXP(playerIndex);
         }
-        else
-        {
-            //If it is an enemy we add just it's base status
-            health = baseStatus.health;
-            currentMp = baseStatus.mana;
-            maxHealth = baseStatus.health;
-            defense = baseStatus.defense;
-            speed = baseStatus.speed;
-            strength = baseStatus.strength;
-            dexterity = baseStatus.dexterity;
-            intelligence = baseStatus.intelligence;
-        }
+
         //Set the UI
         damageText.text = "";
         healthBarFill.fillAmount = (float)health / maxHealth;
         healthText.text = "" + health + "/" + maxHealth;
-        mpBar.fillAmount = (float)currentMp / baseStatus.mana;
-        mpText.text = "" + currentMp + "/" + baseStatus.mana;
+        mpBar.fillAmount = (float)currentMp / maxMP;
+        mpText.text = "" + currentMp + "/" + maxMP;
 
         enemyCombatAI = EnemyCombatAI.instance;
     }
@@ -123,16 +138,16 @@ public class Status : MonoBehaviour
         if (health == 0)
             return false;
 
-        if (currentMp == baseStatus.mana)
+        if (currentMp == maxMP)
             return false;
 
-        if (item.effectValue + currentMp > baseStatus.mana)
+        if (item.effectValue + currentMp > maxMP)
             currentMp = baseStatus.mana;
         else
             currentMp += item.effectValue;
 
-        mpBar.fillAmount = (float)currentMp / baseStatus.mana;
-        mpText.text = "" + currentMp + "/" + baseStatus.mana;
+        mpBar.fillAmount = (float)currentMp / maxMP;
+        mpText.text = "" + currentMp + "/" + maxMP;
         return true;
     }
 
@@ -186,6 +201,10 @@ public class Status : MonoBehaviour
             damageText.text = "";
             meshRender.enabled = false;
             healthBar.SetActive(false);
+
+            if(gameObject.tag == "Enemy")
+                combatStatistics.AddEnemyKillData(this);
+
             return true;
         }
         else

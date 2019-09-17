@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10f5c83eda9934f478672539b3fc9119, type: 3}
   m_Name: Demon
   m_EditorClassIdentifier: 
-  level: 1
   health: 10
   mana: 16
   defense: 5
@@ -20,7 +19,7 @@ MonoBehaviour:
   strength: 7
   intelligence: 8
   dexterity: 6
-  xp: 100
+  xp: 5
   gold: 0
   minLevel: 0
   maxLevel: 0

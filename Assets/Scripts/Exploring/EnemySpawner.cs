@@ -32,7 +32,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void SpawnEnemy(int index)
     {
-        int enemyIndex = Random.Range(0, spawnPoints[index].possibleEnemies.Length);
+        int enemyIndex = Random.Range(0, spawnPoints[index].possibleEnemiesPrefab.Length);
         MapEnemyMovement clone = Instantiate(spawnPoints[index].possibleEnemiesPrefab[enemyIndex], spawnPoints[index].transform).GetComponent<MapEnemyMovement>();
 
         EnemyEncounterHolder enemyEncounterScript = clone.GetComponent<EnemyEncounterHolder>();

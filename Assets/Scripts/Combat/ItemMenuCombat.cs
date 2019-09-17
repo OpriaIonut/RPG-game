@@ -203,7 +203,7 @@ public class ItemMenuCombat : MonoBehaviour
                             {
                                 if(playersStatus[selectedPlayerIndex].health == 0)
                                     errorMessageText[selectedPlayerIndex].text = "Player is dead";
-                                else if (playersStatus[selectedPlayerIndex].currentMp == playersStatus[selectedPlayerIndex].baseStatus.mana)
+                                else if (playersStatus[selectedPlayerIndex].currentMp == playersStatus[selectedPlayerIndex].maxMP)
                                     errorMessageText[selectedPlayerIndex].text = "Max MP";
                             }
 

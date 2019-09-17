@@ -19,6 +19,7 @@ public class PauseMenu : MonoBehaviour
     private List<MapEnemyMovement> enemyMovementScripts = new List<MapEnemyMovement>(); //Reerence to all the enemyMovement scripts so that we can stop the navmeshes from them when pausing the game
     private EquipmentMenu equipmentMenuScript;
     private StatusMenu statusMenuScript;
+    private DataRetainer dataRetainer;
 
     //Booleans used for the transitions between menus
     private bool gameIsPaused = false;
@@ -48,6 +49,7 @@ public class PauseMenu : MonoBehaviour
     {
         //When we start the game turn everything off
         eventSys = EventSystem.current;
+        dataRetainer = DataRetainer.instance;
         inventoryMenu.SetActive(false);
         equipmentMenu.SetActive(false);
         statusMenu.SetActive(false);
@@ -55,6 +57,8 @@ public class PauseMenu : MonoBehaviour
 
         statusMenuScript = StatusMenu.instance;
         equipmentMenuScript = GetComponent<EquipmentMenu>();
+
+        dataRetainer.ExploringInit();
     }
 
     private void Update()

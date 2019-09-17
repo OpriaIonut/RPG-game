@@ -90,6 +90,8 @@ public class EquipmentHolder : MonoBehaviour
     private Inventory inventory;
     private DataRetainer dataRetainer;
 
+    private int[] healthDifference = new int[4]; //When we change the equipment we remember the damage each player took before changing
+
     private void Start()
     {
         statusMenu = StatusMenu.instance;
@@ -160,16 +162,33 @@ public class EquipmentHolder : MonoBehaviour
         }
         //Recalculate the total equipment status
         CalculateEquipmentStatus();
+        ChangePlayerStatus();
         ChangePlayerHealth();   //Change the players health 
         inventory.FindAndSetEquipped(equipment, true);  //Set the new equipment as equipped
         statusMenu.UpdateUI();
+    }
+
+    public void ChangePlayerStatus()
+    {
+        for(int index = 0; index < 4; index++)
+        {
+            healthDifference[index] = dataRetainer.playerStatus[index].maxHealth - dataRetainer.playerStatus[index].currentHealth;
+            dataRetainer.playerStatus[index].UpdatePlayerStatus();
+        }
     }
 
     //Change the player health for all players, called when changing equipment 
     public void ChangePlayerHealth()
     {
         for (int index = 0; index < 4; index++)
-            dataRetainer.playerStatus[index].ChangeHealth(playersHealth[index] + dataRetainer.playerStatus[index].baseStatus.health);
+        {
+            //Calculate the maximum health it can have
+            int value = playersHealth[index] + dataRetainer.playerStatus[index].baseStatus.health + (int)(((dataRetainer.playerStatus[index].playerLevel / 10.0) + dataRetainer.playerStatus[index].baseStatus.health / 8.0) * dataRetainer.playerStatus[index].playerLevel);
+
+            //Subtract the difference from it so that we keep the damage it took
+            value -= healthDifference[index];
+            dataRetainer.playerStatus[index].ChangeHealth(value);
+        }
     }
 
     //Calculate the total equipment status for all players

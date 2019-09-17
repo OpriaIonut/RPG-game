@@ -103,6 +103,12 @@ public class PlayerMovement : MonoBehaviour
         canvasAnim.SetTrigger("EnemyEncounter");
         yield return new WaitForSeconds(delay);
 
+        for(int index = 0; index < 4; index++)
+        {
+            dataRetainer.SetPlayerXP(index, playerStatus[index].currentXP);
+            dataRetainer.SetPlayerLevel(index, playerStatus[index].playerLevel);
+        }
+
         SceneManager.LoadScene("CombatSceneSample");
     }
 }
