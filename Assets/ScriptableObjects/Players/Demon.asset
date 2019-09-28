@@ -20,6 +20,11 @@ MonoBehaviour:
   intelligence: 8
   dexterity: 6
   xp: 5
+  skills:
+  - {fileID: 11400000, guid: c55af111a1387884bb0fdbd8d3c67267, type: 2}
+  - {fileID: 11400000, guid: 9ea27bc1406293843a40fa18f79c7361, type: 2}
+  - {fileID: 11400000, guid: f93a9a519dcf14d48b6a526570908128, type: 2}
+  - {fileID: 11400000, guid: 59af0a9cd10a43248a2eea97cb7f96a4, type: 2}
   gold: 0
   minLevel: 0
   maxLevel: 0

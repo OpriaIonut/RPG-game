@@ -31,6 +31,7 @@ public class CombatScript : MonoBehaviour
     public GameObject combatButtons;                //Reference to player buttons so we can disable and enable them on player turn
     public float inputWaitTime = 0.1f;              //How often to check for input
     public ItemMenuCombat itemMenu;
+    public SkillMenuCombat skillMenu;
 
     private Status[] monsterParty;                  //Retains the status for the targets
 
@@ -182,6 +183,12 @@ public class CombatScript : MonoBehaviour
     {
         combatButtons.SetActive(!value);
         itemMenu.ActivateItemMenu(value);
+    }
+
+    public void SelectSkillOption(bool value)
+    {
+        combatButtons.SetActive(!value);
+        skillMenu.ActivateSkillMenu(value);
     }
 
     //After we did an action simply change the turn
