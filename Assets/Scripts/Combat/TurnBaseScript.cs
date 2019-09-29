@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(CombatScript))]
 public class TurnBaseScript : MonoBehaviour
@@ -29,7 +28,6 @@ public class TurnBaseScript : MonoBehaviour
 
     [Header("UI elements")]
     public Text[] turnText;                 // Reference to the UI elements that display the turns, ATM it is a text object but after time I may make them images
-    public GameObject hiddenButton;         // Helps the transition of the player buttons
     public Text endBattleText;
     public Animator canvasAnimator;
 
@@ -43,8 +41,6 @@ public class TurnBaseScript : MonoBehaviour
     private int[] turnLayout = new int[20]; // For each turn it contains the index of the character in the vector "characters". If there is no char in this turn then -1
     
     // References to other important scripts
-    [HideInInspector]
-    public EventSystem eventSystem;
     private CombatScript combatManager;
     private EnemyCombatAI enemyAI;
     private DataRetainer dataRetainer;
@@ -57,7 +53,6 @@ public class TurnBaseScript : MonoBehaviour
         combatManager = CombatScript.instance;
         combatStatistics = CombatStatistics.instance;
         enemyAI = GetComponent<EnemyCombatAI>();
-        eventSystem = EventSystem.current;
 
         characters = FindObjectsOfType<Status>();
         turnWaitTime = new int[characters.Length];
@@ -134,7 +129,6 @@ public class TurnBaseScript : MonoBehaviour
             if (currentTurnCharacter.gameObject.tag == "Player")
             {
                 //If it is the player turn start the player interface
-                eventSystem.SetSelectedGameObject(hiddenButton);
                 combatManager.StartPlayerTurn();
             }
             else
@@ -219,7 +213,7 @@ public class TurnBaseScript : MonoBehaviour
     {
         for(int index = 0; index < turnLayout.Length; index++)
         {
-            //Empty the text for all turns that don't have a player
+            //Empty the text for all turns that don't have a character
             if (turnLayout[index] == -1 || characters[turnLayout[index]].dead == true)
                 turnText[index].text = "";
             else
@@ -241,42 +235,6 @@ public class TurnBaseScript : MonoBehaviour
         if (turnLayout[0] == -1)
             return null;
         return characters[turnLayout[0]];
-    }
-
-    //A character has died so we want to remove him from all lists
-    public void TakeOutCharacters(Status character)
-    {
-        if (character.tag != "Player")
-        {
-            bool cond = false;
-            for (int index = 0; index < characters.Length - 1; index++)
-            {
-                //We find the character
-                if (character == characters[index])
-                {
-                    cond = true;
-                }
-                //We shift all arrays and resize them
-                if (cond == true)
-                {
-                    turnWaitTime[index] = turnWaitTime[index + 1];
-                    characters[index] = characters[index + 1];
-                }
-            }
-            Array.Resize(ref characters, characters.Length - 1);
-            Array.Resize(ref turnWaitTime, turnWaitTime.Length - 1);
-
-            //We erase him from the turns list
-            //Because we shifted all values in the array, the last position will give us out of bounds.
-            for (int index2 = 0; index2 < turnLayout.Length; index2++)
-            {
-                if (turnLayout[index2] == characters.Length)
-                {
-                    turnLayout[index2] = -1;
-                    break;
-                }
-            }
-        }
     }
 
     #region Scene Changers

@@ -6,21 +6,22 @@ using UnityEngine.UI;
 
 public class InventoryMenu : MonoBehaviour
 {
-    public GameObject hiddenButton;     //Hidden button that is first selected when opening the inventory (used to toggle between items)
     public Transform itemSlotsParent;   //The place where we will intantiate the itemSlotPrefabs
     public GameObject itemSlotPrefab;   //The UI prefab for the item slots
     public Text description;            //The text component onto which we will write the description of the current focused item
 
     //Reference to the player select menu components, will be activated after selecting an item
     public GameObject playerSelectMenu;
-    public GameObject playerSelectHiddenButton;
+    public GameObject playerSelectFirstSelectedButton;
 
     [HideInInspector]
     public bool selectingPlayer = false;    //True if we picked an item, marks whether or not we should now try to pick a player
     private Inventory inventory;
     private int selectedItemIndex;          //The index for the item as it appears in the itemSlots list
     private bool menuIsActive = false;      //The script will always be active so we stop/activate all functionality based on this bool
+    private float lastInputTime = 0f;
 
+    private GameObject lastSelectedButton;
     private List<GameObject> itemSlots = new List<GameObject>();    //Reference to the itemSlots component in the scene
     private EventSystem eventSys;
 
@@ -50,61 +51,54 @@ public class InventoryMenu : MonoBehaviour
                 }
             }
 
-            //If we are not focusing the hidden button and we are pressing the "Interact" button
-            if (eventSys.currentSelectedGameObject != hiddenButton)
+            if (Time.time - lastInputTime > 0.5f && Input.GetButtonDown("Interact"))
             {
-                if (Input.GetButtonDown("Interact"))
+                //If we are not selecting the player then start selecting it
+                if (selectingPlayer == false)
                 {
-                    //If we are not selecting the player then start selecting it
-                    if (selectingPlayer == false)
+                    SelectingPlayer(true);
+                }
+                else
+                {
+                    bool itemUsed = false;
+
+                    if (inventory.items[selectedItemIndex].first.recoverHP == true)
                     {
-                        SelectingPlayer(true);
+                        bool success = eventSys.currentSelectedGameObject.GetComponent<PlayerSelectMenuButton>().ChangeHealth(inventory.items[selectedItemIndex].first);
+
+                        if (success)
+                        {
+                            itemUsed = true;
+                        }
                     }
-                    else if (eventSys.currentSelectedGameObject != playerSelectHiddenButton)
+                    if (inventory.items[selectedItemIndex].first.recoverMana == true)
                     {
-                        bool itemUsed = false;
+                        bool success = eventSys.currentSelectedGameObject.GetComponent<PlayerSelectMenuButton>().ChangeMana(inventory.items[selectedItemIndex].first);
 
-                        if(inventory.items[selectedItemIndex].first.recoverHP == true)
+                        if (success)
                         {
-                            bool success = eventSys.currentSelectedGameObject.GetComponent<PlayerSelectMenuButton>().ChangeHealth(inventory.items[selectedItemIndex].first);
-
-                            if (success)
-                            {
-                                itemUsed = true;
-                            }
+                            itemUsed = true;
                         }
-                        if(inventory.items[selectedItemIndex].first.recoverMana == true)
-                        {
-                            bool success = eventSys.currentSelectedGameObject.GetComponent<PlayerSelectMenuButton>().ChangeMana(inventory.items[selectedItemIndex].first);
+                    }
 
-                            if (success)
-                            {
-                                itemUsed = true;
-                            }
-                        }
+                    if (itemUsed)
+                    {
+                        //If we are successful, stop selecting the player, decrease the item count of the used item
+                        //To do: In the future make items usable multiple times without deactivating the player select menu
+                        SelectingPlayer(false);
 
-                        if (itemUsed)
+                        inventory.items[selectedItemIndex].second--;
+                        if (inventory.items[selectedItemIndex].second == 0)
                         {
-                            //If we are successful, stop selecting the player, decrease the item count of the used item
-                            //To do: In the future make items usable multiple times without deactivating the player select menu
+                            //If the count is 0 destroy the UI element in the scene and remove the item from all lists
                             SelectingPlayer(false);
-
-                            inventory.items[selectedItemIndex].second--;
-                            if (inventory.items[selectedItemIndex].second == 0)
-                            {
-                                //If the count is 0 destroy the UI element in the scene and remove the item from all lists
-                                SelectingPlayer(false);
-                                Destroy(itemSlots[selectedItemIndex]);
-                                itemSlots.RemoveAt(selectedItemIndex);
-                                inventory.items.RemoveAt(selectedItemIndex);
-                            }
-                            //Update the UI (the count or even the names MAY have changed... i'm not to sure... sorry)
-                            InitializeInventorySlots();
-
-                            //Set the 
-                            eventSys.SetSelectedGameObject(hiddenButton);
-                            description.text = "";
+                            Destroy(itemSlots[selectedItemIndex]);
+                            itemSlots.RemoveAt(selectedItemIndex);
+                            inventory.items.RemoveAt(selectedItemIndex);
                         }
+                        //Update the UI (the count or even the names MAY have changed... i'm not to sure... sorry)
+                        InitializeInventorySlots();
+                        description.text = "";
                     }
                 }
             }
@@ -114,15 +108,16 @@ public class InventoryMenu : MonoBehaviour
     //Called by pause menu
     public void ActivateInventoryMenu()
     {
-        eventSys.SetSelectedGameObject(hiddenButton);
         menuIsActive = true;
         InitializeInventorySlots();
+        lastInputTime = Time.time;
     }
 
     //Called by pause menu
     public void DeactivateInventoryMenu()
     {
         menuIsActive = false;
+        lastSelectedButton = null;
         SelectingPlayer(false);
     }
 
@@ -134,9 +129,17 @@ public class InventoryMenu : MonoBehaviour
 
         //Set the focused button to what it's supposed to be
         if (value == false)
-            eventSys.SetSelectedGameObject(hiddenButton);
+        {
+            if(lastSelectedButton == null)
+                eventSys.SetSelectedGameObject(itemSlots[0]);
+            else
+                eventSys.SetSelectedGameObject(lastSelectedButton);
+        }
         else
-            eventSys.SetSelectedGameObject(playerSelectHiddenButton);
+        {
+            lastSelectedButton = eventSys.currentSelectedGameObject;
+            eventSys.SetSelectedGameObject(playerSelectFirstSelectedButton.gameObject);
+        }
     }
 
     private void InitializeInventorySlots()
@@ -153,5 +156,6 @@ public class InventoryMenu : MonoBehaviour
             itemSlots[index].transform.GetChild(0).GetComponent<Text>().text = "" + inventory.items[index].first.itemName;
             itemSlots[index].transform.GetChild(1).GetComponent<Text>().text = "x" + inventory.items[index].second;
         }
+        eventSys.SetSelectedGameObject(itemSlots[0]);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(TurnBaseScript))]
 public class CombatScript : MonoBehaviour
@@ -26,6 +27,7 @@ public class CombatScript : MonoBehaviour
     #endregion
 
     //To do: make boss fights unavoidable
+    public GameObject firstSelectedButton;         // Helps the transition of the player buttons
     public int runAwayProbability = 30;             //The probability to run away from a battle
     public float criticalFactorCorrection = 5;      //When we have max dexterity(152) we have a 30% chance to give a critical hit
     public GameObject combatButtons;                //Reference to player buttons so we can disable and enable them on player turn
@@ -33,8 +35,11 @@ public class CombatScript : MonoBehaviour
     public ItemMenuCombat itemMenu;
     public SkillMenuCombat skillMenu;
 
+    [HideInInspector] public GameObject lastSelectedButton;
+
     private Status[] monsterParty;                  //Retains the status for the targets
 
+    private EventSystem eventSys;
     private TurnBaseScript turnManager;
     private bool pickTarget = false;                //Did the player choose an option that makes us need to pick a target?
     private int currentTargetIndex = 0;             //Used for picking target    
@@ -45,6 +50,7 @@ public class CombatScript : MonoBehaviour
         //In the begining turn off player buttons
         combatButtons.SetActive(false);
         turnManager = TurnBaseScript.instance;
+        eventSys = EventSystem.current;
 
         //Find all enemies; you can't get only the status script from them so there was a need for a workaround
         GameObject[] monsterAux = GameObject.FindGameObjectsWithTag("Enemy");
@@ -65,22 +71,7 @@ public class CombatScript : MonoBehaviour
             float movement = Input.GetAxis("Horizontal");
             if (movement != 0)
             {
-                monsterParty[currentTargetIndex].turnIndicator.enabled = false; //Disable the turn indicator for the previous monster
-                                                                                //Move the target index to where it should be
-                if (movement > 0)
-                {
-                    currentTargetIndex++;
-                    if (currentTargetIndex == monsterParty.Length)
-                        currentTargetIndex = 0;
-                }
-                else
-                {
-                    currentTargetIndex--;
-                    if (currentTargetIndex < 0)
-                        currentTargetIndex = monsterParty.Length - 1;
-                }
-                monsterParty[currentTargetIndex].turnIndicator.enabled = true;  //Enable the turn indicator for current target
-                lastInputTime = Time.time;
+                ToggleEnemy(movement);
             }
 
             //If we chose to attack
@@ -103,21 +94,19 @@ public class CombatScript : MonoBehaviour
                 //Damage the enemy; it will return true if the enemy has died
                 if (monsterParty[currentTargetIndex].TakeDamage(damage, criticalHit) == true)
                 {
-                    //If it has died take him out from all lists in turnBaseScript
-                    turnManager.TakeOutCharacters(monsterParty[currentTargetIndex]);
-
-                    //Take him out from our monsterPartyList too
-                    for (int index = currentTargetIndex; index < monsterParty.Length - 1; index++)
-                        monsterParty[index] = monsterParty[index + 1];
-
-                    //Resize the array
-                    Array.Resize(ref monsterParty, monsterParty.Length - 1);
+                    monsterParty[currentTargetIndex].dead = true;
                 }
-                //Set the monster index to 0 (because we resize the array, there will always be a monster at position 0, except for when all mosnters are dead)
-                currentTargetIndex = 0;
+
+                bool cond = false;
+                for (int index = 0; index < monsterParty.Length; index++)
+                    if (monsterParty[index].dead == false)
+                    {
+                        cond = true;
+                        break;
+                    }
 
                 //If there are no more monsters then stop the game
-                if (monsterParty.Length == 0)
+                if (cond == false)
                 {
                     turnManager.GameWon();
                 }
@@ -133,10 +122,41 @@ public class CombatScript : MonoBehaviour
                 pickTarget = false;
                 combatButtons.SetActive(true);
                 monsterParty[currentTargetIndex].turnIndicator.enabled = false;
-                turnManager.eventSystem.SetSelectedGameObject(turnManager.hiddenButton);
+                eventSys.SetSelectedGameObject(null);
+                eventSys.SetSelectedGameObject(firstSelectedButton.gameObject);
                 currentTargetIndex = 0;
             }
         }
+    }
+
+    private void ToggleEnemy(float movement)
+    {
+        monsterParty[currentTargetIndex].turnIndicator.enabled = false; //Disable the turn indicator for the previous monster
+                                                                        //Move the target index to where it should be
+        if (movement > 0)
+        {
+            for(int index = currentTargetIndex + 1; index < monsterParty.Length; index++)
+            {
+                if(monsterParty[index].dead == false)
+                {
+                    currentTargetIndex = index;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for (int index = currentTargetIndex - 1; index >= 0; index--)
+            {
+                if (monsterParty[index].dead == false)
+                {
+                    currentTargetIndex = index;
+                    break;
+                }
+            }
+        }
+        monsterParty[currentTargetIndex].turnIndicator.enabled = true;  //Enable the turn indicator for current target
+        lastInputTime = Time.time;
     }
 
     //Called on button press
@@ -145,7 +165,17 @@ public class CombatScript : MonoBehaviour
         //In order to attack we need to pick a target
         lastInputTime = Time.time;
         pickTarget = true;
-        combatButtons.SetActive(false);                 //Also disabe UI
+        combatButtons.SetActive(false);
+
+        for (int index = 0; index < monsterParty.Length; index++)
+        {
+            if (monsterParty[index].dead == false)
+            {
+                currentTargetIndex = index;
+                break;
+            }
+        }
+
         monsterParty[currentTargetIndex].turnIndicator.enabled = true;   //And we need a visual representation to see who we pick
     }
 
@@ -176,17 +206,23 @@ public class CombatScript : MonoBehaviour
     public void StartPlayerTurn()
     {
         combatButtons.SetActive(true);
+        eventSys.SetSelectedGameObject(null);
+        eventSys.SetSelectedGameObject(firstSelectedButton);
     }
 
     //Called by ItemMenuCombat script to toggle the item menu
     public void SelectItemOption(bool value)
     {
+        if(value == true)
+            lastSelectedButton = eventSys.currentSelectedGameObject;
         combatButtons.SetActive(!value);
         itemMenu.ActivateItemMenu(value);
     }
 
     public void SelectSkillOption(bool value)
     {
+        if(value == true)
+            lastSelectedButton = eventSys.currentSelectedGameObject;
         combatButtons.SetActive(!value);
         skillMenu.ActivateSkillMenu(value);
     }
@@ -194,6 +230,7 @@ public class CombatScript : MonoBehaviour
     //After we did an action simply change the turn
     public void EndPlayerTurn()
     {
+        lastSelectedButton = null;
         combatButtons.SetActive(false);
         turnManager.ChangeTurn();
     }

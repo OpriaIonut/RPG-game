@@ -53,8 +53,34 @@ public class EnemyCombatAI : MonoBehaviour
         yield return new WaitForSeconds(seconds);
 
         //First pick the target
-        //To do: make it pick targets according to certain criteria
         int targetIndex = UnityEngine.Random.Range(0, playerParty.Length);
+
+        if(playerParty[targetIndex].dead == true)
+        {
+            //If the player is dead we will look on the right side of the list
+            bool cond = false;
+            for(int index = targetIndex + 1; index < playerParty.Length; index++)
+            {
+                if(playerParty[index].dead == false)
+                {
+                    targetIndex = index;
+                    cond = true;
+                }
+            }
+            //If we didn't find any player alive in the right side then we look on the left side
+            if(cond == false)
+            {
+                for (int index = targetIndex - 1; index >= 0; index--)
+                {
+                    if (playerParty[index].dead == false)
+                    {
+                        targetIndex = index;
+                        cond = true;
+                    }
+                }
+            }
+        }
+
         playerParty[targetIndex].turnIndicator.enabled = true;
 
         //Wait a while
@@ -74,14 +100,16 @@ public class EnemyCombatAI : MonoBehaviour
         //Damage the target, it returns true if it has died
         if (playerParty[targetIndex].TakeDamage(damage, criticalHit) == true)
         {
-            //Take him out from our array and resize it
-            for (int index = targetIndex; index < playerParty.Length - 1; index++)
-                playerParty[index] = playerParty[index + 1];
-            Array.Resize(ref playerParty, playerParty.Length - 1);
+            playerParty[targetIndex].dead = true;
         }
 
+        bool cond1 = false;
+        for (int index = 0; index < playerParty.Length; index++)
+            if (playerParty[index].dead == false)
+                cond1 = true;
+
         //If there are no more players end the game
-        if (playerParty.Length == 0)
+        if (cond1 == false)
         {
             turnManager.GameOver();
         }
@@ -90,13 +118,6 @@ public class EnemyCombatAI : MonoBehaviour
             //Else end the turn
             EndTurn();
         }
-    }
-
-    //Add the player to the array so that we can select, damage, etc. it again
-    public void RevivePlayer(Status player)
-    {
-        Array.Resize(ref playerParty, playerParty.Length + 1);
-        playerParty[playerParty.Length - 1] = player;
     }
 
     public void EndTurn()

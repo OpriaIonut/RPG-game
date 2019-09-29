@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class EquipmentMenu : MonoBehaviour
 {
-    public GameObject hiddenButton;         //Hidden button for the equipment menu(used to toggle between equipment slots
+    public GameObject firstSelectedButton;         //Weapon slot will be the first selected
     public GameObject[] equipmentButtons;   //Equipment buttons that will appear when activating the menu (if you press on them you will change the equipment of that specific type
     public Text[] equipmentButtonsText;     //Text component on the equipment buttons
     public Text[] totalStatusText;          //This will show the total status given by all pieces of equipment
@@ -19,11 +19,12 @@ public class EquipmentMenu : MonoBehaviour
     public Color equippedColor;             //Color for the equipment taht is currently equipped (in the equipment selection menu)
 
     public GameObject equipmentSelectMenu;          //Menu ectivated when we are trying to change the equipment of a specific type
-    public GameObject equipmentSelectHiddenButton;
+    public GameObject equipmentSelectFirstSelectedButton;
     public GameObject equipmentSlotPrefab;          //The slots prefab used to instantiate the equipment slots when changing equipment
     private List<GameObject> equipmentSlots = new List<GameObject>();   //Reference to the intantiated equipment slots
     public bool selectEquipment = false;            //Bool used to know if we are selecting the equipment in order to use that functionality
 
+    private GameObject lastSelectedButton;
     private Color defaultSelectEquipColor;  //The default color of the equipment slot
     private Color playerTabDefaultColor;    //Default color for the player tab
     private EquipmentHolder equipmentHolder;//Reference to the script that holds the equipment for each player
@@ -62,7 +63,7 @@ public class EquipmentMenu : MonoBehaviour
         //If we activated the menu wait a short while so that we don't use wrong input, for more details check menuActivationCooldown implementation
         if (equipmentMenuActive && Time.time - menuActivationCooldown > 0.25f)
         {
-            if (Input.GetButtonDown("Interact") && eventSys.currentSelectedGameObject != null && eventSys.currentSelectedGameObject != equipmentSelectHiddenButton)
+            if (Input.GetButtonDown("Interact") && eventSys.currentSelectedGameObject != null)
             {
                 //If we press the "Interact" button and we are not selecting the equipment yet, start selecting the equipment and generate the slots
                 if (selectEquipment == false)
@@ -148,19 +149,19 @@ public class EquipmentMenu : MonoBehaviour
     {
         GameObject auxObj;
         Text aux;
-        for(int index = 0; index < inventory.equipments.Count; index++)
+        for (int index = 0; index < inventory.equipments.Count; index++)
         {
-            if(inventory.equipments[index].first.equipmentType == selectedEquipmentType && inventory.equipments[index].first.playerType == selectedPlayerType)
+            if (inventory.equipments[index].first.equipmentType == selectedEquipmentType && inventory.equipments[index].first.playerType == selectedPlayerType)
             {
                 //For every equipment, if it is of the type needed intantiate it
                 auxObj = Instantiate(equipmentSlotPrefab, equipmentSelectMenu.transform);
                 auxObj.GetComponent<EquipmentSlotHolder>().equipment = inventory.equipments[index].first;
-                
+
                 aux = auxObj.GetComponentInChildren<Text>();
                 aux.text = inventory.equipments[index].first.equipmentName;
 
                 //If it is equipped change it's color
-                if(inventory.equipments[index].second == true)
+                if (inventory.equipments[index].second == true)
                 {
                     auxObj.GetComponent<Image>().color = equippedColor;
                 }
@@ -191,15 +192,18 @@ public class EquipmentMenu : MonoBehaviour
         }
         equipmentSelectMenu.SetActive(value);
 
-        if(value == false)
+        if (value == false)
         {
             //If we are deactivating the select menu set the focused obj as the hidden button
-            eventSys.SetSelectedGameObject(hiddenButton);
+            if(lastSelectedButton == null)
+                eventSys.SetSelectedGameObject(firstSelectedButton);
+            else
+                eventSys.SetSelectedGameObject(lastSelectedButton);
         }
         else
         {
             //Otherwise find the quipment type (used to instatiate slots) based on the index
-            switch(selectedEquipmentIndex)
+            switch (selectedEquipmentIndex)
             {
                 case 0:
                     selectedEquipmentType = EquipmentType.Weapon;
@@ -241,8 +245,8 @@ public class EquipmentMenu : MonoBehaviour
                     break;
             }
 
-            //Set the focus to the equipmentSelectHiddenButton
-            eventSys.SetSelectedGameObject(equipmentSelectHiddenButton);
+            lastSelectedButton = eventSys.currentSelectedGameObject;
+            eventSys.SetSelectedGameObject(equipmentSelectFirstSelectedButton);
         }
     }
 
@@ -406,12 +410,14 @@ public class EquipmentMenu : MonoBehaviour
     //Find the index of the currently selected equipment
     private void GetSelectedIndex()
     {
-        for(int index = 0; index < equipmentButtons.Length; index++)
-            if(equipmentButtons[index] == eventSys.currentSelectedGameObject)
+        for (int index = 0; index < equipmentButtons.Length; index++)
+        {
+            if (equipmentButtons[index] == eventSys.currentSelectedGameObject)
             {
                 selectedEquipmentIndex = index;
                 return;
             }
+        }
         selectedEquipmentIndex = -1;
     }
 
@@ -422,6 +428,12 @@ public class EquipmentMenu : MonoBehaviour
         menuActivationCooldown = Time.time;
 
         if (value == true)
-            eventSys.SetSelectedGameObject(hiddenButton);
+        {
+            eventSys.SetSelectedGameObject(firstSelectedButton);
+        }
+        else
+        {
+            lastSelectedButton = null;
+        }
     }
 }

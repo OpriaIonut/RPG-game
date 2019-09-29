@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
     [Header("UI")]
-    public GameObject pauseHiddenButton;    //The main hidden button
+    public GameObject pauseFirstSelectedButton;    //The main hidden button
     public GameObject pauseGameMenu;        //Reference to the UI pause menu
     public GameObject pauseGameButtons;     //Reference to the UI buttons from the pause menu (when opening another menu like the inventory we need to disable them so taht we don't toggle between them too)
     public GameObject inventoryMenu;        //Reference to the inventory UI menu so that we can toggle it
@@ -15,6 +16,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject statusMenu;           //Reference to the status UI menu so that we can toggle it
     public GameObject[] playerObjects;     //When we pause the game we deactivate it
 
+    private GameObject lastSelectedButton;
     private EventSystem eventSys;
     private List<MapEnemyMovement> enemyMovementScripts = new List<MapEnemyMovement>(); //Reerence to all the enemyMovement scripts so that we can stop the navmeshes from them when pausing the game
     private EquipmentMenu equipmentMenuScript;
@@ -90,6 +92,7 @@ public class PauseMenu : MonoBehaviour
         gameIsPaused = !gameIsPaused;
         pauseGameMenu.SetActive(gameIsPaused);
         pauseGameButtons.SetActive(gameIsPaused);
+        lastSelectedButton = null;
 
         //Activate/Stop the enemy navmeshes
         for (int index = 0; index < enemyMovementScripts.Count; index++)
@@ -105,7 +108,7 @@ public class PauseMenu : MonoBehaviour
         //If we are pausing the game set the focus to the hidden button
         if(gameIsPaused == true)
         {
-            eventSys.SetSelectedGameObject(pauseHiddenButton);
+            eventSys.SetSelectedGameObject(pauseFirstSelectedButton);
         }
     }
 
@@ -128,10 +131,17 @@ public class PauseMenu : MonoBehaviour
         {
             //IF we are disabling the inventory menu, deactivate it and set the focus to the hidden button
             inventoryScript.DeactivateInventoryMenu();
-            eventSys.SetSelectedGameObject(pauseHiddenButton);
+
+            if (lastSelectedButton == null)
+                eventSys.SetSelectedGameObject(pauseFirstSelectedButton);
+            else
+                eventSys.SetSelectedGameObject(lastSelectedButton);
         }
         else
+        {
+            lastSelectedButton = eventSys.currentSelectedGameObject;
             inventoryScript.ActivateInventoryMenu();    //Else activate the inventory menu
+        }
     }
 
     public void ToggleEquipmentMenu()
@@ -147,23 +157,41 @@ public class PauseMenu : MonoBehaviour
 
         //Activate/Deactivate everything that needs to be
         equipmentActive = !equipmentActive;
+
+        if (equipmentActive == true)
+            lastSelectedButton = eventSys.currentSelectedGameObject;
+
         equipmentMenu.SetActive(equipmentActive);
         equipmentMenuScript.ActivateEquipmentMenu(equipmentActive);
         pauseGameButtons.SetActive(!equipmentActive);
 
         //If we are disabling the equipment menu, set the focus to the hidden button
         if (equipmentActive == false)
-            eventSys.SetSelectedGameObject(pauseHiddenButton);
+        {
+            if (lastSelectedButton == null)
+                eventSys.SetSelectedGameObject(pauseFirstSelectedButton);
+            else
+                eventSys.SetSelectedGameObject(lastSelectedButton);
+        }
     }
 
     public void ToggleStatusMenu()
     {
         statusActive = !statusActive;
+
+        if (statusActive)
+            lastSelectedButton = eventSys.currentSelectedGameObject;
+
         statusMenu.SetActive(statusActive);
         pauseGameButtons.SetActive(!equipmentActive);
         statusMenuScript.ToggleStatusMenu(statusActive);
 
         if (statusActive == false)
-            eventSys.SetSelectedGameObject(pauseHiddenButton);
+        {
+            if(lastSelectedButton == null)
+                eventSys.SetSelectedGameObject(pauseFirstSelectedButton);
+            else
+                eventSys.SetSelectedGameObject(lastSelectedButton);
+        }
     }
 }

@@ -111,8 +111,8 @@ public class Status : MonoBehaviour
         if (meshRender.enabled == false)
         {
             //When we revive the player we add it again to the enemyCombatAI list so that it can target us again
-            enemyCombatAI.RevivePlayer(this);
             meshRender.enabled = true;
+            healthBar.SetActive(true);
             dead = false;
         }
 
@@ -120,7 +120,7 @@ public class Status : MonoBehaviour
         int value = item.effectValue;
         if (item.effectWithPercentage)
         {
-            value = value * maxHealth / 100;
+            value = (int)(value * maxHealth / 100f);
         }
 
         health += value;

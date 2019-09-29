@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class SkillMenuCombat : MonoBehaviour
 {
-    public GameObject hiddenButton;
+    //public Button firstSelectedButton;
     public GameObject descriptionTab;
     public GameObject skillSlotPrefab;
     public GameObject skillParent;
@@ -14,11 +14,14 @@ public class SkillMenuCombat : MonoBehaviour
     public Status[] playersStatus;
     public Status[] enemyStatus;
 
+    private GameObject lastSelectedButton;
     private TurnBaseScript turnBaseScript;
     private EventSystem eventSys;
     private CombatScript combatScript;
 
     private List<GameObject> skillSlots = new List<GameObject>();
+
+    private int targetIndex = 0;
 
     private bool menuIsActive = false;
     private bool selectingTarget = false;
@@ -38,7 +41,14 @@ public class SkillMenuCombat : MonoBehaviour
         {
             if(Input.GetButtonDown("Cancel"))
             {
-                combatScript.SelectSkillOption(false);
+                if(selectingTarget)
+                {
+
+                }
+                else
+                {
+                    combatScript.SelectSkillOption(false);
+                }
             }
 
             if(Time.time - lastInputTime > 1f && Input.GetButtonDown("Interact"))
@@ -55,39 +65,16 @@ public class SkillMenuCombat : MonoBehaviour
                 }
             }
 
-            Targeting();
+            if(selectingTarget)
+            {
+                Targeting();
+            }
         }
     }
 
     private void Targeting()
     {
-        if(selectingTarget)
-        {
-            switch(selectedSkill.skillType)
-            {
-                case SkillType.Attack:
 
-                    break;
-                case SkillType.AttackBoost:
-
-                    break;
-                case SkillType.DefenseBoost:
-
-                    break;
-                case SkillType.HpRecovery:
-
-                    break;
-                case SkillType.Instakill:
-
-                    break;
-                case SkillType.MpRecovery:
-
-                    break;
-                case SkillType.Revival:
-
-                    break;
-            }
-        }
     }
 
     private void FindSelectedSkill()
@@ -112,12 +99,12 @@ public class SkillMenuCombat : MonoBehaviour
         if(value == true)
         {
             GenerateSkillSlots();
-            eventSys.SetSelectedGameObject(hiddenButton);
         }
         else
         {
+            lastSelectedButton = null;
             DestroySkillSlots();
-            eventSys.SetSelectedGameObject(turnBaseScript.hiddenButton);
+            eventSys.SetSelectedGameObject(combatScript.firstSelectedButton.gameObject);
         }
     }
 
@@ -138,5 +125,9 @@ public class SkillMenuCombat : MonoBehaviour
             skillSlots[index].transform.GetChild(0).GetComponent<Text>().text = "" + turnBaseScript.currentTurnCharacter.baseStatus.skills[index].name;
             skillSlots[index].transform.GetChild(1).GetComponent<Text>().text = "" + turnBaseScript.currentTurnCharacter.baseStatus.skills[index].manaCost[turnBaseScript.currentTurnCharacter.baseStatus.skills[index].level];
         }
+        if (lastSelectedButton == null)
+            eventSys.SetSelectedGameObject(skillSlots[0]);
+        else
+            eventSys.SetSelectedGameObject(lastSelectedButton);
     }
 }
