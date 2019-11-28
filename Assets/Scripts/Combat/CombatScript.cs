@@ -97,24 +97,7 @@ public class CombatScript : MonoBehaviour
                     monsterParty[currentTargetIndex].dead = true;
                 }
 
-                bool cond = false;
-                for (int index = 0; index < monsterParty.Length; index++)
-                    if (monsterParty[index].dead == false)
-                    {
-                        cond = true;
-                        break;
-                    }
-
-                //If there are no more monsters then stop the game
-                if (cond == false)
-                {
-                    turnManager.GameWon();
-                }
-                else
-                {
-                    //Else end the turn
-                    EndPlayerTurn();
-                }
+                CheckEndBattle();
             }
 
             if(Input.GetButtonDown("Cancel"))
@@ -126,6 +109,27 @@ public class CombatScript : MonoBehaviour
                 eventSys.SetSelectedGameObject(firstSelectedButton.gameObject);
                 currentTargetIndex = 0;
             }
+        }
+    }
+
+    public void CheckEndBattle()
+    {
+        bool cond = false;
+        for (int index = 0; index < monsterParty.Length; index++)
+            if (monsterParty[index].dead == false)
+            {
+                cond = true;
+                break;
+            }
+
+        if (cond == false)
+        {
+            turnManager.GameWon();
+        }
+        else
+        {
+            //Else end the turn
+            EndPlayerTurn();
         }
     }
 

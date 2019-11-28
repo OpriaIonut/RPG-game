@@ -34,7 +34,6 @@ public class TurnBaseScript : MonoBehaviour
     [HideInInspector]
     public Status currentTurnCharacter;              // Reference to the status of the character that is about to act (turnLayout[0])
 
-    public List<Status> deadPlayers = new List<Status>();
     [HideInInspector]
     public Status[] characters;            // Reference to all characters in the scene
     private int[] turnWaitTime;             // Retains the wait time for all characters. It is calculated at the beginning because the speed doesn't change.

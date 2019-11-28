@@ -59,7 +59,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6538532784730918642}
-  m_Mesh: {fileID: -680548685650868890, guid: 17e26ae6c37503c459e612dd3a3550b5, type: 3}
+  m_Mesh: {fileID: -3688538404354337187, guid: 17e26ae6c37503c459e612dd3a3550b5, type: 3}
 --- !u!23 &4792215796404451886
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -85,6 +85,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -183,6 +184,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fec39f1a8decb9c4184d83a371ff507b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemies: []
+  enemyLevel: 
 --- !u!1001 &2693905841335505549
 PrefabInstance:
   m_ObjectHideFlags: 0
